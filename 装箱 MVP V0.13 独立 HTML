@@ -1,0 +1,1009 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>配货工作台 MVP</title><style>body{margin:0;padding:16px;background:#f3f6f7} @media(max-width:600px){body{padding:0}}</style></head><body><div id="packing-mvp">
+  <style>
+    #packing-mvp{color-scheme:light dark;--p-bg:light-dark(#f3f6f7,#141b20);--p-card:light-dark(#fff,#1c252c);--p-text:light-dark(#20353d,#ecf2f3);--p-muted:light-dark(#65777e,#a8bbc3);--p-line:light-dark(#dee6e9,#35464d);--p-accent:light-dark(#087a71,#7bd6c5);--p-soft:light-dark(#e5f4ee,#243e37);--p-field:light-dark(#fff,#172026);--p-error:light-dark(#a43b38,#ffb5ae);--p-error-bg:light-dark(#fff0ed,#422b2c);font:15px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-serif;background:var(--p-bg);color:var(--p-text);border-radius:16px;overflow:hidden;box-sizing:border-box}
+    #packing-mvp *{box-sizing:border-box}#packing-mvp button,#packing-mvp input,#packing-mvp select,#packing-mvp textarea{font:inherit;color:inherit}#packing-mvp button{cursor:pointer}#packing-mvp button:disabled{opacity:.45;cursor:default}#packing-mvp [hidden]{display:none!important}#packing-mvp .p-top{padding:18px 28px;background:var(--p-card);border-bottom:1px solid var(--p-line);display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}#packing-mvp .p-brand{display:flex;align-items:center;gap:12px;font-size:19px;font-weight:650;letter-spacing:.04em}#packing-mvp .p-mark{display:grid;grid-template-columns:repeat(2,9px);gap:3px}#packing-mvp .p-mark i{width:9px;height:9px;background:var(--p-accent);border-radius:2px}#packing-mvp .p-mark i:last-child{opacity:.35}#packing-mvp .p-nav{display:flex;gap:6px;flex-wrap:wrap}#packing-mvp .p-nav button{background:transparent;border:0;border-radius:7px;padding:9px 14px;color:var(--p-muted)}#packing-mvp .p-nav button[aria-selected=true]{background:var(--p-soft);color:var(--p-accent);font-weight:600}#packing-mvp .p-wrap{padding:28px;max-width:1280px;margin:auto}#packing-mvp h1{font-size:28px;line-height:1.35;margin:0 0 6px;letter-spacing:-.03em;font-weight:650}#packing-mvp h2{font-size:17px;margin:0;font-weight:650}#packing-mvp h3{font-size:15px;margin:0 0 10px}#packing-mvp p{margin:5px 0 12px}#packing-mvp .p-muted{color:var(--p-muted);font-size:13px}#packing-mvp .p-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:20px}#packing-mvp .p-tag{display:inline-flex;align-items:center;padding:4px 9px;font-size:12px;border-radius:5px;background:var(--p-soft);color:var(--p-accent);white-space:nowrap}#packing-mvp .p-layout{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(280px,1fr);gap:20px;align-items:start}#packing-mvp .p-panel{background:var(--p-card);border:1px solid var(--p-line);border-radius:12px;overflow:hidden}#packing-mvp .p-pad{padding:22px}#packing-mvp .p-section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}#packing-mvp .p-btn{border:1px solid var(--p-line);background:var(--p-card);border-radius:7px;padding:9px 13px;line-height:1.4;min-height:40px}#packing-mvp .p-primary{background:var(--p-accent);border-color:var(--p-accent);color:light-dark(#fff,#142e29);font-weight:600}#packing-mvp .p-link{border:0;background:none;color:var(--p-accent);padding:8px 3px;min-height:40px}#packing-mvp input:not([type=range]):not([type=file]),#packing-mvp select,#packing-mvp textarea{background:var(--p-field);border:1px solid var(--p-line);border-radius:6px;padding:9px 10px;min-width:0;max-width:100%;width:100%}#packing-mvp input[type=number]{font-variant-numeric:tabular-nums}#packing-mvp .p-capacity{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:0 0 20px;border-bottom:1px solid var(--p-line);margin-bottom:20px}#packing-mvp .p-cap-input{display:flex;align-items:center;gap:8px;width:150px;flex-shrink:0}#packing-mvp .p-cap-input input{font-size:20px;font-weight:600;text-align:right}#packing-mvp .p-table{width:100%;border-collapse:collapse;text-align:left;table-layout:fixed}#packing-mvp .p-table th{font-size:12px;color:var(--p-muted);font-weight:500;padding:8px 5px}#packing-mvp .p-table td{padding:8px 5px;border-top:1px solid var(--p-line);vertical-align:middle}#packing-mvp .p-table td:last-child,#packing-mvp .p-table th:last-child{text-align:right}#packing-mvp .p-items th:nth-child(1){width:68%}#packing-mvp .p-items th:nth-child(2){width:24%}#packing-mvp .p-items th:nth-child(3){width:8%}#packing-mvp .p-item-info{font-size:12px;color:var(--p-muted);margin:5px 0 0;overflow-wrap:anywhere}#packing-mvp .p-heading-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}#packing-mvp .p-top-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap}#packing-mvp .p-remove{border:0;background:none;color:var(--p-muted);font-size:20px;width:24px;padding:8px 0;min-height:40px}#packing-mvp .p-strategy{border-top:1px solid var(--p-line);padding-top:22px;margin-top:12px}#packing-mvp .p-range-labels{display:flex;justify-content:space-between;font-size:13px;margin:9px 0 2px}#packing-mvp input[type=range]{width:100%;accent-color:var(--p-accent);margin:15px 0;min-height:25px;cursor:ew-resize}#packing-mvp .p-divider{border-top:1px solid var(--p-line);margin:20px 0}#packing-mvp .p-num{font-variant-numeric:tabular-nums;font-size:29px;letter-spacing:-.04em;font-weight:600;line-height:1.25}#packing-mvp .p-num small{font-size:14px;font-weight:400;color:var(--p-muted);letter-spacing:0}#packing-mvp .p-metrics{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:20px 0}#packing-mvp .p-metrics .p-num{font-size:23px}#packing-mvp .p-track{height:13px;background:var(--p-bg);border-radius:4px;overflow:hidden;display:flex;margin:16px 0 8px}#packing-mvp .p-segment{height:100%;background:var(--p-accent);transition:width .2s}#packing-mvp .p-result-table td{font-variant-numeric:tabular-nums;font-size:14px;padding:10px 2px}#packing-mvp .p-result-table th:first-child{width:43%}#packing-mvp .p-delta{color:var(--p-accent);font-size:12px}#packing-mvp .p-delta-minus{color:var(--p-error)}#packing-mvp .p-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}#packing-mvp .p-actions .p-btn{flex:1;white-space:nowrap}#packing-mvp .p-error{background:var(--p-error-bg);color:var(--p-error);padding:12px 14px;border-radius:8px;font-size:13px;margin-bottom:15px}#packing-mvp .p-notice{background:var(--p-soft);padding:12px 14px;border-radius:8px;font-size:13px;color:var(--p-accent);margin:14px 0}#packing-mvp .p-foot{font-size:12px;color:var(--p-muted);padding-top:16px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}#packing-mvp .p-inv-controls{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}#packing-mvp .p-inv-table th:nth-child(1){width:30%}#packing-mvp .p-inv-table th:nth-child(2){width:22%}#packing-mvp .p-inv-table th:nth-child(3){width:24%}#packing-mvp .p-inv-table th:nth-child(4){width:24%}#packing-mvp .p-inv-table td{vertical-align:top}#packing-mvp .p-mapping{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:12px 0}#packing-mvp .p-label{display:block;font-size:12px;color:var(--p-muted);margin-bottom:5px}#packing-mvp .p-empty{padding:20px 0;color:var(--p-muted);font-size:14px}#packing-mvp .p-rules{margin:14px 0 20px;padding-left:22px}#packing-mvp .p-rules li{margin:9px 0}#packing-mvp .p-toast{margin-top:12px;font-size:13px;color:var(--p-accent)}#packing-mvp .p-file{max-width:100%;font-size:14px;margin:12px 0}#packing-mvp .p-request{width:100%;min-height:110px;resize:vertical}#packing-mvp .p-req-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}#packing-mvp .p-color-dot{width:7px;height:7px;border-radius:50%;background:var(--p-accent);display:inline-block;margin-right:7px}
+    @media(max-width:780px){#packing-mvp .p-layout,#packing-mvp .p-req-grid{grid-template-columns:1fr}#packing-mvp .p-wrap{padding:20px}#packing-mvp .p-top{padding:15px 20px}#packing-mvp .p-heading{margin-bottom:16px}#packing-mvp h1{font-size:25px}#packing-mvp .p-result{order:2}}
+    @media(max-width:480px){#packing-mvp{border-radius:8px}#packing-mvp .p-wrap{padding:16px 12px}#packing-mvp .p-pad{padding:16px 12px}#packing-mvp .p-top{padding:14px 12px;gap:10px}#packing-mvp .p-nav{width:100%;gap:4px}#packing-mvp .p-nav button{flex:1;padding:9px 5px;font-size:14px}#packing-mvp .p-table input,#packing-mvp .p-table select{padding:9px 4px;font-size:16px}#packing-mvp .p-table th,#packing-mvp .p-table td{padding-left:2px;padding-right:2px}#packing-mvp .p-items th:first-child{width:64%}#packing-mvp .p-items th:nth-child(2){width:27%}#packing-mvp .p-items th:nth-child(3){width:9%}#packing-mvp .p-top-actions{width:100%;gap:8px}#packing-mvp .p-top-actions .p-nav{width:auto;flex:1}#packing-mvp .p-heading{flex-wrap:wrap}#packing-mvp .p-heading-actions{width:100%}#packing-mvp .p-heading .p-tag{display:none}#packing-mvp .p-cap-input{width:126px}#packing-mvp .p-btn{min-height:44px}#packing-mvp .p-inv-table th{font-size:11px}#packing-mvp .p-inv-table input{font-size:16px}#packing-mvp .p-inv-table th:first-child{width:31%}#packing-mvp .p-inv-table th:nth-child(2){width:23%}#packing-mvp .p-inv-table th:nth-child(3){width:23%}#packing-mvp .p-inv-table th:nth-child(4){width:23%}}
+    @media(max-width:480px){#packing-mvp .p-inv-table thead{display:none}#packing-mvp .p-inv-table,#packing-mvp .p-inv-table tbody{display:block}#packing-mvp .p-inv-table tr{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:12px 0;border-top:1px solid var(--p-line)}#packing-mvp .p-inv-table td{display:block;padding:0;border:0;min-width:0;text-align:left}#packing-mvp .p-inv-table td:first-child{grid-column:1/-1}#packing-mvp .p-inv-table td:before{content:attr(data-label);display:block;font-size:12px;color:var(--p-muted);margin-bottom:4px}}
+    @media(prefers-reduced-motion:reduce){#packing-mvp .p-segment{transition:none}}
+
+    #packing-mvp .p-layout{display:block}#packing-mvp .p-items th:nth-child(1){width:50%}#packing-mvp .p-items th:nth-child(2){width:18%}#packing-mvp .p-items th:nth-child(3){width:25%}#packing-mvp .p-items th:nth-child(4){width:7%}#packing-mvp .p-suggestion{font-weight:650;font-variant-numeric:tabular-nums}#packing-mvp .p-suggestion .p-delta{display:block;font-weight:400}#packing-mvp .p-summary{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:24px;padding:20px 0 10px;border-top:1px solid var(--p-line);margin-top:10px}#packing-mvp .p-summary .p-num{font-size:26px}#packing-mvp .p-summary .p-track{margin:10px 0 5px;height:9px}#packing-mvp .p-scheme-chart{width:100%;height:96px;display:block;touch-action:pan-y;cursor:crosshair}#packing-mvp .p-scheme-chart .p-point{fill:var(--p-muted);opacity:.24}#packing-mvp .p-scheme-chart .p-best-point{fill:var(--p-accent);opacity:1}#packing-mvp .p-scheme-chart .p-selected-point{fill:none;stroke:var(--p-text);stroke-width:2}#packing-mvp .p-scheme-chart text{fill:var(--p-muted);font:12px -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-serif}#packing-mvp .p-range-wrap{padding:0 7px}#packing-mvp .p-range-wrap input{margin:3px 0 8px}#packing-mvp .p-scheme-meta{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;font-size:12px;color:var(--p-muted)}#packing-mvp .p-scheme-legend{display:inline-flex;align-items:center;gap:6px}#packing-mvp .p-scheme-legend i{width:8px;height:8px;border-radius:50%;background:var(--p-accent)}#packing-mvp .p-file-progress{margin:16px 28px 0;padding:12px 16px;background:var(--p-card);border:1px solid var(--p-line);border-radius:8px}#packing-mvp .p-loader-line{display:flex;justify-content:space-between;gap:12px;font-size:14px}#packing-mvp .p-loader-track{height:7px;background:var(--p-bg);border-radius:4px;overflow:hidden;margin:8px 0}#packing-mvp .p-loader-bar{height:100%;width:0;background:var(--p-accent);transition:width .12s linear}#packing-mvp .p-file-progress[data-failed=true] .p-loader-bar{background:var(--p-error)}#packing-mvp .p-file-progress[data-failed=true] #p-loader-label{color:var(--p-error)}#packing-mvp .p-copy-fallback{width:100%;height:160px;resize:vertical;margin-top:10px;font-size:13px;white-space:pre}#packing-mvp .p-result-hint{font-size:12px;color:var(--p-muted);margin-top:10px}#packing-mvp .p-actions .p-btn{flex:0 1 auto}#packing-mvp .p-candidate-empty{padding:8px 0}
+    @media(max-width:600px){#packing-mvp .p-summary{grid-template-columns:1fr 1fr;gap:14px}#packing-mvp .p-summary>div:first-child{grid-column:1/-1}#packing-mvp .p-file-progress{margin:12px 12px 0}#packing-mvp .p-items th:nth-child(1){width:48%}#packing-mvp .p-items th:nth-child(2){width:21%}#packing-mvp .p-items th:nth-child(3){width:25%}#packing-mvp .p-items th:nth-child(4){width:6%}#packing-mvp .p-items th{font-size:11px}#packing-mvp .p-suggestion{font-size:16px}#packing-mvp .p-actions .p-btn{flex:1}#packing-mvp .p-section-head{flex-wrap:wrap}#packing-mvp .p-item-info{font-size:11px}#packing-mvp .p-remove{width:20px}#packing-mvp .p-scheme-meta{font-size:11px}}
+    @media(prefers-reduced-motion:reduce){#packing-mvp .p-loader-bar{transition:none}}
+
+    #packing-mvp .p-items th:nth-child(1){width:35%}#packing-mvp .p-items th:nth-child(2){width:14%}#packing-mvp .p-items th:nth-child(3){width:18%}#packing-mvp .p-items th:nth-child(4){width:29%;text-align:left}#packing-mvp .p-items th:nth-child(5){width:4%}#packing-mvp .p-row-options{display:flex;gap:6px;flex-wrap:wrap}#packing-mvp .p-row-options button{padding:7px 8px;font-size:12px;min-height:36px}#packing-mvp .p-row-options button[aria-pressed=true]{background:var(--p-soft);border-color:var(--p-accent);color:var(--p-accent)}#packing-mvp .p-row-locked{background:color-mix(in srgb,var(--p-soft) 36%,transparent)}#packing-mvp .p-plan-steps{display:grid;grid-template-columns:repeat(var(--p-steps,1),minmax(0,1fr));gap:4px;margin:4px 0 12px}#packing-mvp .p-plan-step{border:1px solid var(--p-line);border-radius:6px;background:var(--p-card);padding:7px 0;min-height:36px;font-variant-numeric:tabular-nums;position:relative}#packing-mvp .p-plan-step:before{content:'';display:block;width:5px;height:5px;background:var(--p-accent);border-radius:50%;margin:0 auto 3px}#packing-mvp .p-plan-step[aria-pressed=true]{background:var(--p-soft);border-color:var(--p-accent);color:var(--p-accent);font-weight:650}#packing-mvp .p-secondary-amount{font-size:13px;color:var(--p-muted);margin-top:8px}#packing-mvp .p-inv-table th:nth-child(1){width:26%}#packing-mvp .p-inv-table th:nth-child(n+2){width:18.5%}#packing-mvp #p-volume-value{overflow-wrap:anywhere}#packing-mvp .p-plan-step:focus-visible,#packing-mvp .p-row-options button:focus-visible{outline:2px solid var(--p-accent);outline-offset:2px}
+    @media(max-width:650px){#packing-mvp .p-items thead{display:none}#packing-mvp .p-items,#packing-mvp .p-items tbody{display:block}#packing-mvp .p-items tr{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px 12px;position:relative;padding:14px 24px 14px 0;border-top:1px solid var(--p-line)}#packing-mvp .p-items td{display:block;min-width:0;border:0;padding:0;text-align:left}#packing-mvp .p-items td:first-child{grid-column:1/-1}#packing-mvp .p-items td[data-label]:before{content:attr(data-label);display:block;font-size:12px;color:var(--p-muted);font-weight:400;margin-bottom:4px}#packing-mvp .p-items td:nth-child(4){grid-column:1/-1}#packing-mvp .p-items td:last-child{position:absolute;right:0;top:15px}#packing-mvp .p-row-options button{min-height:40px;padding:8px 12px}#packing-mvp .p-inv-table thead{display:none}#packing-mvp .p-inv-table,#packing-mvp .p-inv-table tbody{display:block}#packing-mvp .p-inv-table tr{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;padding:12px 0;border-top:1px solid var(--p-line)}#packing-mvp .p-inv-table td{display:block;padding:0;border:0;min-width:0;text-align:left}#packing-mvp .p-inv-table td:first-child{grid-column:1/-1}#packing-mvp .p-inv-table td:before{content:attr(data-label);display:block;font-size:12px;color:var(--p-muted);margin-bottom:4px}#packing-mvp .p-plan-steps{gap:3px}#packing-mvp .p-plan-step{font-size:12px}}
+
+    #packing-mvp .p-sortbar{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin:0 0 14px;font-size:13px}#packing-mvp .p-sortbar select{width:auto;flex:0 1 160px;padding:8px 10px}#packing-mvp .p-sortbar .p-btn{padding:8px 10px;min-height:38px;font-size:13px}#packing-mvp .p-list-actions{display:flex;flex-wrap:wrap;gap:5px}#packing-mvp .p-list-actions .p-btn{font-size:12px;padding:7px 8px;min-height:36px}#packing-mvp .p-delete-btn{color:var(--p-error)}#packing-mvp .p-items th:nth-child(1){width:34%}#packing-mvp .p-items th:nth-child(2){width:13%}#packing-mvp .p-items th:nth-child(3){width:19%}#packing-mvp .p-items th:nth-child(4){width:34%;text-align:left}#packing-mvp .p-items td:last-child{text-align:left}#packing-mvp .p-inv-table th:first-child{width:23%}#packing-mvp .p-inv-table th:nth-child(n+2){width:14%}#packing-mvp .p-inv-table th:last-child{width:21%;text-align:left}#packing-mvp .p-inv-table td:last-child{text-align:left}#packing-mvp .p-empty-row td{padding:20px 8px!important;color:var(--p-muted);text-align:left!important}#packing-mvp .p-delete-confirm .p-actions{margin-top:10px}#packing-mvp .p-delete-confirm p{overflow-wrap:anywhere}
+    @media(max-width:650px){#packing-mvp .p-items tr{padding-right:0}#packing-mvp .p-items td:last-child{position:static;grid-column:1/-1}#packing-mvp .p-items .p-row-options{gap:6px}#packing-mvp .p-list-actions .p-btn,#packing-mvp .p-row-options .p-btn{min-height:40px}#packing-mvp .p-inv-table td:last-child{grid-column:1/-1}#packing-mvp .p-empty-row td{grid-column:1/-1}#packing-mvp .p-sortbar select{flex:1;min-width:0}#packing-mvp .p-sortbar>span{flex-shrink:0}}
+
+    #packing-mvp .p-weight-comparison{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;border-top:1px solid var(--p-line);padding:20px 0 12px;margin-top:12px}#packing-mvp .p-weight-comparison .p-num{font-size:27px;margin-top:4px;overflow-wrap:anywhere}#packing-mvp .p-weight-change{grid-column:1/-1;font-size:13px;color:var(--p-muted);margin-top:-3px}#packing-mvp .p-summary{margin-top:0;padding-top:12px;border-top:0}#packing-mvp .p-quantity-totals td,#packing-mvp .p-quantity-totals th{border-top:2px solid var(--p-line);font-size:14px;font-weight:650;padding-top:12px;padding-bottom:12px;font-variant-numeric:tabular-nums}#packing-mvp .p-quantity-totals th{text-align:left;color:var(--p-text)}#packing-mvp .p-proposal-notice{margin:12px 0}#packing-mvp .p-clear-btn{color:var(--p-error)}
+    @media(max-width:650px){#packing-mvp .p-weight-comparison{gap:10px}#packing-mvp .p-weight-comparison .p-num{font-size:21px}#packing-mvp .p-weight-comparison .p-num small{font-size:12px}#packing-mvp .p-weight-comparison .p-muted{font-size:12px}#packing-mvp .p-items tfoot{display:block}#packing-mvp .p-items .p-quantity-totals{grid-template-columns:minmax(0,1fr) minmax(0,1fr);padding:12px 0;border-top:2px solid var(--p-line)}#packing-mvp .p-items .p-quantity-totals th{grid-column:1/-1;border:0;padding:0;width:auto;font-size:14px}#packing-mvp .p-items .p-quantity-totals td{position:static;grid-column:auto;border:0;padding:0;font-size:16px}#packing-mvp .p-items .p-quantity-totals td:last-child{display:none}}
+  </style>
+  <header class="p-top"><div class="p-brand"><span class="p-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>配货工作台</div><div class="p-top-actions"><nav class="p-nav" role="tablist" aria-label="业务页面"><button type="button" id="p-tab-packing" role="tab" aria-controls="p-page-packing" data-tab="packing" aria-selected="true">装箱</button><button type="button" id="p-tab-inventory" role="tab" aria-controls="p-page-inventory" data-tab="inventory" aria-selected="false">货品维护</button></nav><button class="p-link" id="p-prd-open" type="button" data-go="requirements">PRD 联动</button></div></header>
+  <div class="p-file-progress" id="p-file-progress" role="status" aria-live="polite" hidden><div class="p-loader-line"><span id="p-loader-label"></span><span id="p-loader-value">0%</span></div><div class="p-loader-track" id="p-loader-progress" role="progressbar" aria-label="文件处理模拟进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="p-loader-bar" id="p-loader-bar"></div></div><span class="p-muted" id="p-loader-note">模拟进度 · 文件在当前页面处理</span></div>
+  <main class="p-wrap">
+    <section id="p-page-packing" role="tabpanel" aria-labelledby="p-tab-packing" data-page="packing">
+      <div class="p-heading"><div><h1>装箱</h1><p class="p-muted">选择型号、填写数量，编辑目标重量后补全。</p></div><div class="p-heading-actions"><span class="p-tag">可编辑示例</span><button class="p-btn" id="p-maintain-products" type="button" data-go="inventory">维护货品</button></div></div>
+      <div class="p-layout"><section class="p-panel p-pad" aria-label="本次装箱货品与优化结果">
+        <div class="p-capacity"><div><h2>目标装载重量</h2><span class="p-muted">可编辑，装箱重量不超过此值</span></div><label class="p-cap-input"><input id="p-capacity" type="number" min="0.001" step="0.001" aria-label="目标装载重量 kg"><span>kg</span></label></div>
+        <div class="p-section-head"><h2>本次装箱货品</h2><span class="p-tag" id="p-mode">实时计算</span></div>
+        <div class="p-sortbar"><span>排序</span><select id="p-packing-sort-field" aria-label="装箱排序字段"><option value="manual">手动顺序</option><option value="name">型号</option><option value="quantity">原数量</option><option value="suggested">建议数量</option></select><button class="p-btn" id="p-packing-sort-direction" type="button" aria-label="切换装箱排序方向">升序 ↑</button></div><div id="p-errors" class="p-error" role="alert" hidden></div>
+        <table class="p-table p-items"><thead><tr><th scope="col">型号 / 单重 / 售价</th><th scope="col">原数量</th><th scope="col">建议数量 / 补减</th><th scope="col">调整 / 操作</th></tr></thead><tbody id="p-input-rows"></tbody><tfoot><tr class="p-quantity-totals"><th scope="row">合计</th><td data-label="原数量合计" id="p-original-quantity-total">0 件</td><td data-label="建议数量合计" id="p-suggested-quantity-total">—</td><td></td></tr></tfoot></table>
+        <button class="p-link" type="button" id="p-add-row">＋ 添加型号</button>
+        <p class="p-muted">锁定后保持原数量；优先增减先调整该行。单重、售价、体积与库存读取「货品维护」。</p>
+        <div id="p-result-body" aria-live="polite"></div><div id="p-proposal-notice" class="p-notice p-proposal-notice" role="status" hidden>已放弃当前未应用方案；已应用的数量会保留。可点击「重新生成方案」或调整优先设置继续优化。</div>
+        <div class="p-strategy"><div class="p-section-head"><h2>库存自动补全策略</h2><span class="p-tag" id="p-mix-label"></span></div><div class="p-scheme-meta"><span id="p-candidate-count"></span><span class="p-scheme-legend"><i aria-hidden="true"></i><span id="p-best-label">最大装载重量</span></span></div><svg id="p-scheme-chart" class="p-scheme-chart" role="img" aria-label="可行方案装载重量，绿色点为最大重量方案"></svg><div class="p-range-labels"><span id="p-average-endpoint">平均补全</span><span id="p-profit-endpoint">最大收益</span></div><div class="p-range-wrap"><input type="range" id="p-mix" min="0" max="0" step="1" aria-label="选择离散装箱方案"></div><div id="p-plan-steps" class="p-plan-steps" aria-label="逐个选择最优方案"></div><p class="p-muted" id="p-mix-note"></p></div>
+        <div class="p-actions"><button class="p-btn p-primary" id="p-apply" type="button">应用建议数量</button><button class="p-btn" id="p-copy" type="button">一键复制</button><button class="p-btn" id="p-export" type="button">导出装箱清单 XLSX</button><button class="p-btn p-clear-btn" id="p-clear-packing" type="button">一键清空装车</button><button class="p-btn" id="p-discard-plan" type="button">放弃方案</button><button class="p-btn p-primary" id="p-regenerate-plan" type="button" hidden>重新生成方案</button></div><div id="p-copy-panel" hidden><p class="p-muted">未能自动复制，请选中下方清单并复制。</p><textarea class="p-copy-fallback" id="p-copy-text" readonly aria-label="可手动复制的装箱清单"></textarea></div><div class="p-toast" id="p-packing-toast" role="status"></div>
+      </section></div>
+      <footer class="p-foot"><span>试算不扣减库存 · 收益指销售额，不含成本</span><span id="p-storage-status">预览数据保存在当前浏览器</span></footer>
+    </section>
+    <section id="p-page-inventory" role="tabpanel" aria-labelledby="p-tab-inventory" data-page="inventory" hidden>
+      <div class="p-heading"><div><h1>货品维护</h1><p class="p-muted">维护单位重量、单位体积、售价与库存，或上传 XLSX 进货清单。</p></div><div class="p-heading-actions"><span class="p-tag" id="p-product-count"></span><button class="p-btn" id="p-return-packing" type="button" data-go="packing">返回装箱</button></div></div>
+      <div class="p-panel p-pad"><div class="p-inv-controls"><label class="p-btn p-primary" for="p-file">上传进货单 XLSX</label><input id="p-file" class="p-file" type="file" accept=".xlsx" aria-label="上传进货单 XLSX"><button class="p-btn" id="p-template" type="button">下载进货模板</button><button class="p-btn" id="p-add-product" type="button">新增产品</button></div>
+        <div id="p-import-error" class="p-error" role="alert" hidden></div>
+        <div id="p-import-panel" class="p-notice" hidden><h3 id="p-import-title">检查进货单</h3><label class="p-label" for="p-sheet">工作表</label><select id="p-sheet"></select><div class="p-mapping" id="p-mapping"></div><div id="p-import-summary"></div><div class="p-actions"><button class="p-btn p-primary" id="p-import-confirm" type="button">确认入库</button><button class="p-btn" id="p-import-cancel" type="button">取消</button></div></div>
+        <div class="p-sortbar"><span>排序</span><select id="p-product-sort-field" aria-label="货品排序字段"><option value="manual">手动顺序</option><option value="name">型号</option><option value="weight">单位重量</option><option value="volume">单位体积</option><option value="price">售价</option><option value="stock">库存</option></select><button class="p-btn" id="p-product-sort-direction" type="button" aria-label="切换货品排序方向">升序 ↑</button></div><div id="p-delete-confirm" class="p-notice p-delete-confirm" role="alert" hidden><p id="p-delete-message"></p><div class="p-actions"><button class="p-btn p-delete-btn" id="p-delete-confirm-button" type="button">确认删除</button><button class="p-btn" id="p-delete-cancel-button" type="button">取消</button></div></div><table class="p-table p-inv-table"><thead><tr><th scope="col">型号</th><th scope="col">单位重量 / kg</th><th scope="col">单位体积 / m³</th><th scope="col">售价 / 元</th><th scope="col">可用库存 / 件</th><th scope="col">操作</th></tr></thead><tbody id="p-products"></tbody></table><p class="p-muted">型号、单重、体积、售价和库存均可修改。体积可暂留空，装箱页会提示待完善；体积只作统计，不限制装载。重量精确到克；数量以整数件计。旧版四列进货单仍可导入。</p><div class="p-toast" id="p-inv-toast" role="status"></div><div class="p-divider"></div><h3>最近入库</h3><div id="p-receipts" class="p-muted"></div>
+      </div>
+    </section>
+    <section data-page="requirements" hidden>
+      <div class="p-heading"><div><h1>PRD 联动</h1><p class="p-muted">业务说明与预览使用同一版本，需求调整留在这里。</p></div><div class="p-heading-actions"><span class="p-tag" id="p-version"></span><button class="p-btn" id="p-prd-return-packing" type="button" data-go="packing">返回装箱</button></div></div>
+      <div class="p-req-grid"><section class="p-panel p-pad"><h2>当前功能口径</h2><ul class="p-rules" id="p-rules"></ul><button class="p-btn" id="p-export-prd" type="button">导出当前需求说明</button><p class="p-muted">示例数字是试算数据，不会变成固定需求。</p></section><section class="p-panel p-pad"><h2>提出需求调整</h2><p class="p-muted">写下需要改变的业务规则。嵌入 PRD 时保存为待同步请求，由文档维护任务更新说明和预览；不是立即修改规则。</p><label class="p-label" for="p-change">需求调整内容</label><textarea id="p-change" class="p-request" placeholder="例如：调整平均补全的分配口径……"></textarea><div class="p-actions"><button class="p-btn p-primary" type="button" id="p-change-save">保存待同步请求</button></div><div id="p-sync-status" class="p-toast" role="status"></div><div class="p-divider"></div><h3>Excel 与网页</h3><p class="p-muted">网页负责实时求解。Excel 提供进货输入、方案导出和公式复核；桌面 Excel 的 Solver 可另做优化，浏览器不执行 VBA 宏。</p></section></div>
+    </section>
+  </main>
+</div>
+<script>
+/*
+ * PackOptimizer.solve(rows, capacityKg, mix, options?)
+ * rows: { id, quantity, stock, weight (kg, <=3 decimals), price (yuan/unit) }.
+ * mix: 0 = proportional/average allocation, 1 = the optimized endpoint.
+ * options.fillFirst defaults to true: maximize reachable weight <= capacity,
+ * then maximize sales revenue at that same weight (also maximizing yuan/kg
+ * at that weight). Set false for the legacy maximum-revenue-first objective.
+ * This does not claim the maximum revenue/weight ratio across different loads.
+ * Only supplied rows participate. Underweight plans only add; overweight
+ * plans only remove. No mutation of the supplied rows.
+ * Throws an Error with code INVALID_INPUT, STOCK_EXCEEDED, or RANGE_EXCEEDED.
+ * quality describes only the selected, direction-constrained endpoint:
+ * exact (bounded knapsack) or
+ * approximate (resource-limited heuristic), never an unsupported optimality claim.
+ * Integer apportionment at the average/intermediate positions is a heuristic.
+ */
+(function (root, factory) {
+  if (typeof module === 'object' && module.exports) module.exports = factory();
+  else root.PackOptimizer = factory();
+}(typeof globalThis !== 'undefined' ? globalThis : this, function () {
+  'use strict';
+
+  var MAX_CAPACITY_STATES = 350000;
+  var MAX_DP_WORK = 24000000;
+  var MAX_ROWS = 10000;
+
+  function fail(code, message) {
+    var err = new Error(message);
+    err.code = code;
+    throw err;
+  }
+  function gcd(a, b) {
+    while (b) { var t = a % b; a = b; b = t; }
+    return a;
+  }
+  function total(q, values) {
+    var sum = 0;
+    for (var i = 0; i < q.length; i++) sum += q[i] * values[i];
+    return sum;
+  }
+  function better(value, weight, oldValue, oldWeight, fillFirst) {
+    return fillFirst
+      ? weight > oldWeight || (weight === oldWeight && value > oldValue)
+      : value > oldValue || (value === oldValue && weight > oldWeight);
+  }
+
+  // Use exact fixed-point money in the DP, so 0.1 + 0.2 cannot win a
+  // spurious tie against 0.3. Extreme precision/magnitudes use the explicitly
+  // approximate path instead of claiming an exact floating-point optimum.
+  function integerPrices(prices, bounds) {
+    var decimals = 0;
+    for (var i = 0; i < prices.length; i++) {
+      if (!bounds[i]) continue;
+      var parts = String(prices[i]).toLowerCase().split('e');
+      var point = parts[0].indexOf('.');
+      var fraction = point < 0 ? 0 : parts[0].length - point - 1;
+      decimals = Math.max(decimals, fraction - (Number(parts[1]) || 0));
+    }
+    if (decimals > 9) return null;
+    var scale = Math.pow(10, decimals), sum = 0, values = [];
+    for (var j = 0; j < prices.length; j++) {
+      var value = bounds[j] ? Math.round(prices[j] * scale) : 0;
+      if (!Number.isSafeInteger(value) || !Number.isSafeInteger(value * bounds[j])) return null;
+      values.push(value); sum += value * bounds[j];
+      if (!Number.isSafeInteger(sum)) return null;
+    }
+    return values;
+  }
+
+  function validate(rows, capacityKg, mix) {
+    if (!Array.isArray(rows) || rows.length > MAX_ROWS)
+      fail('INVALID_INPUT', 'rows 必须是数组，且最多包含 ' + MAX_ROWS + ' 行。');
+    if (!Number.isFinite(capacityKg) || capacityKg < 0 ||
+        !Number.isFinite(mix) || mix < 0 || mix > 1)
+      fail('INVALID_INPUT', '容量须为非负数，滑块位置须在 0 到 1 之间。');
+    var scaledCap = capacityKg * 1000;
+    if (!Number.isSafeInteger(Math.ceil(scaledCap)))
+      fail('RANGE_EXCEEDED', '容量超出安全计算范围。');
+    // Convert to integer grams. Never round a genuine sub-gram capacity up.
+    var cap = Math.floor(scaledCap);
+    var rounded = Math.round(scaledCap);
+    if (rounded / 1000 <= capacityKg) cap = rounded;
+    var ids = new Set(), weights = [], prices = [], base = [], stocks = [];
+    for (var i = 0; i < rows.length; i++) {
+      var row = rows[i];
+      if (!row || row.id === undefined || row.id === null || ids.has(row.id))
+        fail('INVALID_INPUT', '每行需要唯一的 id。');
+      ids.add(row.id);
+      if (!Number.isSafeInteger(row.quantity) || row.quantity < 0 ||
+          !Number.isSafeInteger(row.stock) || row.stock < 0)
+        fail('INVALID_INPUT', '数量和库存必须是非负安全整数。');
+      if (row.quantity > row.stock)
+        fail('STOCK_EXCEEDED', '当前数量超过库存：' + String(row.id));
+      if (!Number.isFinite(row.weight) || row.weight <= 0 ||
+          !Number.isFinite(row.price) || row.price < 0)
+        fail('INVALID_INPUT', '单件重量须大于 0，卖价须为非负数。');
+      var w = Math.round(row.weight * 1000);
+      if (!Number.isSafeInteger(w) || w <= 0 ||
+          Math.abs(row.weight * 1000 - w) > 1e-7)
+        fail('INVALID_INPUT', '单件重量最多支持 3 位小数。');
+      if (!Number.isSafeInteger(row.quantity * w) ||
+          !Number.isFinite(row.stock * row.price))
+        fail('RANGE_EXCEEDED', '该行数量或金额超出安全计算范围。');
+      weights.push(w); prices.push(row.price);
+      base.push(row.quantity); stocks.push(row.stock);
+    }
+    if (!Number.isSafeInteger(total(base, weights)) ||
+        !Number.isFinite(total(stocks, prices)))
+      fail('RANGE_EXCEEDED', '总重量或总金额超出安全计算范围。');
+    return { cap: cap, weights: weights, prices: prices, base: base, stocks: stocks };
+  }
+
+  // Water-fill increments proportional to shares, freezing saturated rows.
+  function waterFill(start, upper, weights, shares, budget) {
+    var target = start.slice(), active = [];
+    for (var i = 0; i < start.length; i++)
+      if (upper[i] > target[i] && shares[i] > 0) active.push(i);
+    for (var pass = 0; active.length && budget > 1e-8 && pass <= start.length; pass++) {
+      var rate = 0, maxStep = Infinity;
+      for (var a = 0; a < active.length; a++) {
+        var j = active[a];
+        rate += shares[j] * weights[j];
+        maxStep = Math.min(maxStep, (upper[j] - target[j]) / shares[j]);
+      }
+      if (!Number.isFinite(rate) || rate <= 0) break;
+      var step = Math.min(budget / rate, maxStep);
+      var spent = 0;
+      for (var b = 0; b < active.length; b++) {
+        var k = active[b];
+        var add = Math.min(upper[k] - target[k], shares[k] * step);
+        target[k] += add; spent += add * weights[k];
+      }
+      budget = Math.max(0, budget - spent);
+      active = active.filter(function (index) {
+        return upper[index] - target[index] > 1e-9;
+      });
+      if (spent <= 1e-8) break;
+    }
+    return target;
+  }
+
+  // Floor a continuous feasible solution, then use largest remainders.
+  function roundPlan(target, lower, upper, weights, cap) {
+    var q = target.map(function (x, i) {
+      return Math.max(lower[i], Math.min(upper[i], Math.floor(x)));
+    });
+    var used = total(q, weights);
+    // A floating point water-fill can miss an integer boundary by a few ulps.
+    // This defensive repair also makes integer feasibility unconditional.
+    if (used > cap) {
+      for (var i = q.length - 1; i >= 0 && used > cap; i--) {
+        var remove = Math.min(q[i] - lower[i], Math.ceil((used - cap) / weights[i]));
+        q[i] -= remove; used -= remove * weights[i];
+      }
+    }
+    var order = q.map(function (_, index) { return index; }).sort(function (a, b) {
+      return (target[b] - q[b]) - (target[a] - q[a]) || weights[a] - weights[b] || a - b;
+    });
+    for (var z = 0; z < order.length; z++) {
+      var j = order[z];
+      if (target[j] > q[j] && q[j] < upper[j] && used + weights[j] <= cap) {
+        q[j]++; used += weights[j];
+      }
+    }
+    return q;
+  }
+
+  function averagePlan(lower, upper, base, weights, cap) {
+    var lowerWeight = total(lower, weights);
+    var shares = base.slice();
+    if (!shares.some(function (x) { return x > 0; })) shares.fill(1);
+    var target = waterFill(lower, upper, weights, shares, cap - lowerWeight);
+    // If all positively weighted proportions hit their stock limits, distribute
+    // spare capacity equally among initially empty rows.
+    var spare = cap - total(target, weights);
+    if (spare > 1e-7) {
+      var extraShares = upper.map(function (u, i) { return u > target[i] ? 1 : 0; });
+      target = waterFill(target, upper, weights, extraShares, spare);
+    }
+    var q = roundPlan(target, lower, upper, weights, cap);
+    // Re-apportion rounding residue among rows that still fit. This is bounded
+    // work; small final residue can remain even if a different combination fits.
+    for (var pass = 0; pass < 32; pass++) {
+      var left = cap - total(q, weights);
+      var fit = q.map(function (x, i) { return x < upper[i] && weights[i] <= left; });
+      if (!fit.some(Boolean)) break;
+      var s = shares.map(function (x, i) { return fit[i] ? x : 0; });
+      if (!s.some(function (x) { return x > 0; })) s = fit.map(function (x) { return x ? 1 : 0; });
+      var nextTarget = waterFill(q, upper, weights, s, left);
+      var next = roundPlan(nextTarget, q, upper, weights, cap);
+      if (next.every(function (x, i) { return x === q[i]; })) break;
+      q = next;
+    }
+    return q;
+  }
+
+  function greedyEndpoint(bounds, weights, prices, budget, order) {
+    var q = bounds.map(function () { return 0; });
+    for (var j = 0; j < order.length; j++) {
+      var i = order[j];
+      q[i] = Math.min(bounds[i], Math.floor(budget / weights[i]));
+      budget -= q[i] * weights[i];
+    }
+    return q;
+  }
+
+  function revenuePlan(lower, upper, weights, prices, cap, average, fillFirst) {
+    var n = lower.length, budget = cap - total(lower, weights);
+    var bounds = upper.map(function (u, i) {
+      return Math.min(u - lower[i], Math.floor(budget / weights[i]));
+    });
+    var divisor = 0, chunks = [];
+    for (var i = 0; i < n; i++) if (bounds[i] > 0) divisor = gcd(divisor, weights[i]);
+    if (!divisor) return { q: lower.slice(), quality: 'exact' };
+    var capacity = Math.floor(budget / divisor);
+    var objectivePrices = integerPrices(prices, bounds);
+    // Binary splitting represents every count in [0, bound], including when
+    // the last chunk repeats a previous chunk size.
+    for (var r = 0; r < n; r++) {
+      var remaining = bounds[r], size = 1;
+      while (remaining > 0) {
+        var count = Math.min(size, remaining);
+        chunks.push({ row: r, count: count, w: count * (weights[r] / divisor), value: count * (objectivePrices || prices)[r] });
+        remaining -= count; size *= 2;
+      }
+    }
+    var work = 0;
+    for (var c = 0; c < chunks.length; c++) work += capacity - chunks[c].w + 1;
+    if (!objectivePrices || capacity + 1 > MAX_CAPACITY_STATES || work > MAX_DP_WORK ||
+        (capacity + 1) * chunks.length > 64000000) {
+      var indices = bounds.map(function (_, index) { return index; });
+      var orders = [
+        indices.slice().sort(function (a, b) { return prices[b] / weights[b] - prices[a] / weights[a] || weights[a] - weights[b]; }),
+        indices.slice().sort(function (a, b) { return prices[b] - prices[a] || weights[a] - weights[b]; }),
+        indices.slice().sort(function (a, b) { return weights[a] - weights[b] || prices[b] - prices[a]; })
+      ];
+      var best = average.slice(), bestRevenue = total(best, prices), bestWeight = total(best, weights);
+      for (var o = 0; o < orders.length; o++) {
+        var extras = greedyEndpoint(bounds, weights, prices, budget, orders[o]);
+        var candidate = lower.map(function (x, index) { return x + extras[index]; });
+        var revenue = total(candidate, prices), weight = total(candidate, weights);
+        if (better(revenue, weight, bestRevenue, bestWeight, fillFirst)) {
+          best = candidate; bestRevenue = revenue; bestWeight = weight;
+        }
+      }
+      return { q: best, quality: 'approximate' };
+    }
+    var dp = new Float64Array(capacity + 1);
+    var used = new Uint32Array(capacity + 1);
+    var decisions = [], bytes = Math.ceil((capacity + 1) / 8);
+    for (var chunkIndex = 0; chunkIndex < chunks.length; chunkIndex++) {
+      var chunk = chunks[chunkIndex], bits = new Uint8Array(bytes);
+      for (var slot = capacity; slot >= chunk.w; slot--) {
+        var candidateValue = dp[slot - chunk.w] + chunk.value;
+        var candidateWeight = used[slot - chunk.w] + chunk.w;
+        if (better(candidateValue, candidateWeight, dp[slot], used[slot], fillFirst)) {
+          dp[slot] = candidateValue; used[slot] = candidateWeight;
+          bits[slot >> 3] |= 1 << (slot & 7);
+        }
+      }
+      decisions.push(bits);
+    }
+    var result = lower.slice(), cursor = capacity;
+    for (var d = chunks.length - 1; d >= 0; d--) {
+      if (decisions[d][cursor >> 3] & (1 << (cursor & 7))) {
+        result[chunks[d].row] += chunks[d].count;
+        cursor -= chunks[d].w;
+      }
+    }
+    return { q: result, quality: 'exact' };
+  }
+
+  function solve(rows, capacityKg, mix, options) {
+    if (mix === undefined) mix = 0;
+    if (options !== undefined && (!options || typeof options !== 'object' || Array.isArray(options)))
+      fail('INVALID_INPUT', 'options 须为对象。');
+    if (options && options.fillFirst !== undefined && typeof options.fillFirst !== 'boolean')
+      fail('INVALID_INPUT', 'fillFirst 须为布尔值。');
+    var fillFirst = !options || options.fillFirst !== false;
+    var v = validate(rows, capacityKg, mix), baseWeight = total(v.base, v.weights);
+    var mode = baseWeight > v.cap ? 'remove' : baseWeight < v.cap ? 'add' : 'unchanged';
+    var lower = mode === 'remove' ? v.base.map(function () { return 0; }) : v.base.slice();
+    var upper = mode === 'remove' ? v.base.slice() : v.stocks.slice();
+    // Capacity-aware bounds avoid overflowing stock * weight in large catalogs.
+    var incrementalBudget = v.cap - total(lower, v.weights);
+    upper = upper.map(function (x, i) {
+      return Math.min(x, lower[i] + Math.floor(incrementalBudget / v.weights[i]));
+    });
+    var average = averagePlan(lower, upper, v.base, v.weights, v.cap);
+    var profit = revenuePlan(lower, upper, v.weights, v.prices, v.cap, average, fillFirst);
+    var q;
+    if (mix === 1) q = profit.q.slice();
+    else if (mix === 0) q = average.slice();
+    else {
+      var target = average.map(function (a, i) { return a * (1 - mix) + profit.q[i] * mix; });
+      q = roundPlan(target, lower, upper, v.weights, v.cap);
+    }
+    var weight = total(q, v.weights);
+    return {
+      quantities: q,
+      weight: weight / 1000,
+      revenue: total(q, v.prices),
+      baseWeight: baseWeight / 1000,
+      baseRevenue: total(v.base, v.prices),
+      remaining: Math.max(0, capacityKg - weight / 1000),
+      deltas: q.map(function (x, i) { return x - v.base[i]; }),
+      mode: mode,
+      quality: profit.quality,
+      qualityScope: 'profit-endpoint',
+      objective: fillFirst ? 'fill-then-revenue' : 'revenue-then-fill',
+      profitQuantities: profit.q.slice(),
+      averageQuantities: average.slice()
+    };
+  }
+  return { solve: solve, validate: validate };
+}));
+
+</script>
+<script>
+/* Exact maximum-weight packing choices, capped at ten displayed solutions.
+ * Bounded-knapsack suffix DP counts the full optimal set without enumerating
+ * its quantity vectors. Locked rows are fixed. Priority is a secondary goal
+ * after maximum weight; revenue is exact within those two goals.
+ */
+(function(root,factory){
+  if(typeof module==='object'&&module.exports)module.exports=factory(require('./optimizer.js'));
+  else root.PackCandidates=factory(root.PackOptimizer);
+}(typeof globalThis!=='undefined'?globalThis:this,function(optimizer){
+  'use strict';
+  var MAX_STATES=500001, MAX_CELLS=3000000;
+  function fail(code,message){var e=new Error(message);e.code=code;throw e;}
+  function gcd(a,b){while(b){var t=a%b;a=b;b=t;}return a;}
+  function total(q,values){var x=0;for(var i=0;i<q.length;i++)x+=q[i]*values[i];return x;}
+  function moneyValues(prices){
+    var parsed=prices.map(function(p){var a=String(p).toLowerCase().split('e');return {digits:BigInt(a[0].replace('.','')),power:(Number(a[1])||0)-(a[0].split('.')[1]||'').length};});
+    var scale=0;parsed.forEach(function(p){scale=Math.max(scale,-p.power);});
+    return parsed.map(function(p){return p.digits*10n**BigInt(p.power+scale);});
+  }
+  function capGrams(x){var y=x*1000,r=Math.round(y);return r/1000<=x?r:Math.floor(y);}
+  function build(rows,capacityKg,options){
+    options=options||{};
+    // Validation is shared with the existing optimizer, without running a
+    // second optimizer or depending on its resource-limited endpoint.
+    var v=optimizer.validate(rows,capacityKg,0), weights=v.weights, prices=v.prices, base=v.base;
+    var n=rows.length, cap=v.cap, baseWeight=total(base,weights), baseRevenue=total(base,prices);
+    var mode=baseWeight>cap?'remove':baseWeight<cap?'add':'unchanged';
+    var lower=rows.map(function(r,i){return r.locked||mode!=='remove'?base[i]:0;});
+    var lowerWeight=total(lower,weights), budget=cap-lowerWeight;
+    if(budget<0)fail('LOCKED_OVER_CAPACITY','锁定货品的总重量已超过目标重量，请解锁货品或提高目标重量。');
+    var upper=rows.map(function(r,i){return r.locked||mode==='unchanged'?base[i]:Math.min(mode==='remove'?base[i]:r.stock,lower[i]+Math.floor(budget/weights[i]));});
+    var active=[],divisor=0;
+    for(var i=0;i<n;i++)if(upper[i]>lower[i]){active.push(i);divisor=gcd(divisor,weights[i]);}
+    if(!divisor)divisor=1;
+    var maxBudget=0;active.forEach(function(i){maxBudget+=Math.min(budget,(upper[i]-lower[i])*weights[i]);maxBudget=Math.min(budget,maxBudget);});
+    var C=Math.floor(Math.min(budget,maxBudget)/divisor), m=active.length;
+    if(C+1>MAX_STATES||(m+1)*(C+1)>MAX_CELLS)
+      fail('EXACT_SPACE_LIMIT','当前数据的精确求解规模过大，请减少同时装箱的型号或调整重量精度；未返回截断或伪最优方案。');
+    var ws=active.map(function(i){return weights[i]/divisor;}), bounds=active.map(function(i){return upper[i]-lower[i];});
+    var integerMoney=moneyValues(prices), monies=active.map(function(i){return integerMoney[i];});
+    var priorityValues=active.map(function(i){return rows[i].priority?(mode==='remove'?-weights[i]:weights[i]):0;});
+    var priorityDP=new Array(m+1), countDP=new Array(m+1), moneyDP=new Array(m+1);
+    priorityDP[m]=new Float64Array(C+1);priorityDP[m].fill(-Infinity);priorityDP[m][0]=0;
+    countDP[m]=new Array(C+1).fill(0n);countDP[m][0]=1n;
+    moneyDP[m]=new Array(C+1).fill(null);moneyDP[m][0]=0n;
+    // Each residue uses two monotone windows. The first groups tied priority
+    // scores and sums their exact BigInt counts. The second optimizes the
+    // lexicographic (priority, money) pair, retaining exact decimal money.
+    for(var r=m-1;r>=0;r--){
+      var np=priorityDP[r+1],nc=countDP[r+1],nm=moneyDP[r+1];
+      var cp=new Float64Array(C+1);cp.fill(-Infinity);
+      var cc=new Array(C+1).fill(0n),cm=new Array(C+1).fill(null);
+      var w=ws[r],b=bounds[r],pv=priorityValues[r],mv=monies[r];
+      for(var residue=0;residue<w&&residue<=C;residue++){
+        var groups=[],gh=0,mq=[],mh=0;
+        for(var t=0,s=residue;s<=C;t++,s+=w){
+          var oldest=t-b;
+          while(gh<groups.length){
+            var front=groups[gh];
+            while(front.head<front.items.length&&front.items[front.head].t<oldest){front.sum-=front.items[front.head].count;front.head++;}
+            if(front.head===front.items.length)gh++;else break;
+          }
+          while(mh<mq.length&&mq[mh].t<oldest)mh++;
+          if(np[s]!==-Infinity){
+            var pk=np[s]-t*pv,mk=nm[s]-BigInt(t)*mv;
+            while(groups.length>gh&&groups[groups.length-1].score<pk)groups.pop();
+            if(groups.length===gh||groups[groups.length-1].score!==pk)
+              groups.push({score:pk,items:[],head:0,sum:0n});
+            var last=groups[groups.length-1];last.items.push({t:t,count:nc[s]});last.sum+=nc[s];
+            while(mq.length>mh&&(mq[mq.length-1].priority<pk||(mq[mq.length-1].priority===pk&&mq[mq.length-1].money<mk)))mq.pop();
+            mq.push({t:t,priority:pk,money:mk});
+          }
+          if(gh<groups.length){cp[s]=groups[gh].score+t*pv;cc[s]=groups[gh].sum;cm[s]=mq[mh].money+BigInt(t)*mv;}
+        }
+      }
+      priorityDP[r]=cp;countDP[r]=cc;moneyDP[r]=cm;
+    }
+    var maximum=C;while(maximum>0&&!countDP[0][maximum])maximum--;
+    var count=countDP[0][maximum],maxWeight=(lowerWeight+maximum*divisor)/1000;
+    if(!count)fail('NO_FEASIBLE_SOLUTION','当前锁定和数量条件下没有可行的装箱方案。');
+    function nextChoices(r,remaining,visit){
+      var bound=Math.min(bounds[r],Math.floor(remaining/ws[r]));
+      for(var k=0;k<=bound;k++){
+        var tail=remaining-k*ws[r];
+        if(countDP[r+1][tail]&&priorityDP[r+1][tail]+k*priorityValues[r]===priorityDP[r][remaining])
+          if(visit(k,tail,countDP[r+1][tail])===false)return;
+      }
+    }
+    function unrank(rank){
+      var q=lower.slice(),remaining=maximum;
+      for(var r=0;r<m;r++)nextChoices(r,remaining,function(k,tail,c){
+        if(rank>=c){rank-=c;return;}
+        q[active[r]]+=k;remaining=tail;return false;
+      });
+      return q;
+    }
+    // Equal proportional change is a continuous target. Hard capacity and
+    // priority are enforced by DP; closest extendable quantities are selected
+    // sequentially. This is a balanced heuristic, not a convex-optimal claim.
+    var target=base.slice(),delta=maximum*divisor+lowerWeight-baseWeight;
+    var available=active.slice(),left=Math.abs(delta),add=mode!=='remove';
+    for(var pass=0;available.length&&left>1e-9&&pass<=m;pass++){
+      var denom=0;available.forEach(function(i){denom+=Math.max(1,base[i])*weights[i];});
+      var rate=left/denom,spent=0;
+      available.forEach(function(i){var room=add?upper[i]-target[i]:target[i]-lower[i];var d=Math.min(room,rate*Math.max(1,base[i]));target[i]+=add?d:-d;spent+=d*weights[i];});
+      left-=spent;available=available.filter(function(i){return(add?upper[i]-target[i]:target[i]-lower[i])>1e-9;});
+      if(spent<1e-9)break;
+    }
+    var average=lower.slice(),remaining=maximum;
+    for(var ar=0;ar<m;ar++){
+      var choice=null,bestDistance=Infinity;
+      nextChoices(ar,remaining,function(k,tail){var distance=Math.abs(lower[active[ar]]+k-target[active[ar]]);if(distance<bestDistance){bestDistance=distance;choice={k:k,tail:tail};}});
+      average[active[ar]]+=choice.k;remaining=choice.tail;
+    }
+    var profit=lower.slice();remaining=maximum;
+    for(var pr=0;pr<m;pr++)nextChoices(pr,remaining,function(k,tail){
+      if(moneyDP[pr+1][tail]+BigInt(k)*monies[pr]===moneyDP[pr][remaining]){profit[active[pr]]+=k;remaining=tail;return false;}
+    });
+    var avgKey=average.join(','),profitKey=profit.join(','),selected=[],seen=new Set();
+    function keep(q){var key=q.join(',');if(!seen.has(key)){seen.add(key);selected.push(q);}}
+    keep(average);keep(profit);
+    if(count<=10n){for(var index=0n;index<count;index++)keep(unrank(index));}
+    else{
+      // Quantiles of the exact ranked optimal set, not a truncated DFS prefix.
+      // Endpoints reserve slots, then rank samples fill the remaining slots.
+      for(var j=0;j<10&&selected.length<10;j++)keep(unrank(count*BigInt(j)/10n));
+      for(var offset=0n;selected.length<10&&offset<count;offset++)keep(unrank(offset));
+    }
+    selected.sort(function(a,b){
+      var ak=a.join(','),bk=b.join(',');
+      if(ak===avgKey)return bk===avgKey?0:-1;if(bk===avgKey)return 1;
+      if(profitKey!==avgKey){if(ak===profitKey)return 1;if(bk===profitKey)return -1;}
+      function score(q){var da=0,dp=0;for(var i=0;i<n;i++){var span=Math.max(1,upper[i]-lower[i]);da+=Math.abs(q[i]-average[i])/span;dp+=Math.abs(q[i]-profit[i])/span;}return da+dp?da/(da+dp):0;}
+      return score(a)-score(b)||a.join(',').localeCompare(b.join(','));
+    });
+    var avgIndex=0,profitIndex=0;
+    var plans=selected.map(function(q,index){var key=q.join(',');if(key===avgKey)avgIndex=index;if(key===profitKey)profitIndex=index;return {
+      quantities:q,weight:maxWeight,revenue:total(q,prices),baseWeight:baseWeight/1000,baseRevenue:baseRevenue,
+      deltas:q.map(function(v,i){return v-base[i];}),remaining:Math.max(0,capacityKg-maxWeight),mode:mode,
+      quality:'exact',qualityScope:'maximum-weight-priority',objective:'fill-then-priority-then-revenue',strategyScore:selected.length===1?0:index/(selected.length-1),
+      averageQuantities:average,profitQuantities:profit,isAverage:key===avgKey,isProfit:key===profitKey,isMaxWeight:true
+    };});
+    return {
+      plans:plans,count:plans.length,complete:BigInt(plans.length)===count,scope:'optimal-solutions',scopeLabel:'最大重量最优方案',
+      totalOptimalCountText:count.toString(),maxWeight:maxWeight,maxWeightIndices:plans.map(function(_,i){return i;}),maxWeightScope:'global-feasible-set',
+      averageIndex:avgIndex,profitIndex:profitIndex,endpointsCoincide:avgKey===profitKey,endpointQuality:'exact',averageQuality:'heuristic',
+      priorityApplied:active.some(function(i){return !!rows[i].priority;}),
+      orderDescription:'最多展示10个最大重量最优方案；优先调整标记型号，再按均衡与收益端点的接近程度排列，中间位置不是收益百分比。',
+      stoppedReason:null,dpStates:(m+1)*(C+1)
+    };
+  }
+  function snapIndex(rawIndex,maxIndices,threshold){
+    if(!Number.isFinite(rawIndex))return 0;
+    var nearest=Math.max(0,Math.round(rawIndex)),best=-1,distance=Infinity;
+    threshold=Number.isFinite(threshold)?Math.max(0,threshold):0.5;
+    (maxIndices||[]).forEach(function(i){var d=Math.abs(i-rawIndex);if(Number.isSafeInteger(i)&&d<=threshold+1e-10&&(d<distance||(d===distance&&i<best))){best=i;distance=d;}});
+    return best>=0?best:nearest;
+  }
+  return {build:build,snapIndex:snapIndex};
+}));
+
+</script>
+<script>
+/* PackXlsx: dependency-free XLSX tables. Browser API: await read(File|ArrayBuffer), write(sheets).
+ * Reads cached cell values only; never evaluates formulas or loads macros/external relationships.
+ * Limits: 50 MiB input ZIP, 20 MiB selected XML, 10,000 output rows, 250,000 cell slots.
+ */
+(function (root, factory) {
+  'use strict';
+  var api = factory();
+  if (typeof module === 'object' && module.exports) module.exports = api;
+  if (root) root.PackXlsx = api;
+})(typeof globalThis !== 'undefined' ? globalThis : this, function () {
+  'use strict';
+  var MAX_XML = 20 * 1024 * 1024;
+  var MAX_FILE = 50 * 1024 * 1024;
+  var MAX_ROWS = 10000;
+  var MAX_CELLS = 250000;
+  var NS_MAIN = 'http://schemas.openxmlformats.org/spreadsheetml/2006/main';
+  var NS_REL = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships';
+  var NS_PACKAGE = 'http://schemas.openxmlformats.org/package/2006/relationships';
+  var encoder = new TextEncoder();
+  var crcTable = new Uint32Array(256);
+  for (var ti = 0; ti < 256; ti++) {
+    var tv = ti;
+    for (var tb = 0; tb < 8; tb++) tv = (tv & 1) ? (0xedb88320 ^ (tv >>> 1)) : tv >>> 1;
+    crcTable[ti] = tv >>> 0;
+  }
+  function fail(message) { throw new Error('Excel：' + message); }
+  function crc32(bytes) {
+    var crc = 0xffffffff;
+    for (var i = 0; i < bytes.length; i++) crc = crcTable[(crc ^ bytes[i]) & 255] ^ (crc >>> 8);
+    return (crc ^ 0xffffffff) >>> 0;
+  }
+  function join(parts, size) {
+    var out = new Uint8Array(size == null ? parts.reduce(function (n, p) { return n + p.length; }, 0) : size);
+    var offset = 0;
+    parts.forEach(function (p) { out.set(p, offset); offset += p.length; });
+    return out;
+  }
+  function localName(node) { return node.localName || node.nodeName.split(':').pop(); }
+  function children(node, name) {
+    return Array.prototype.filter.call(node.childNodes || [], function (n) { return n.nodeType === 1 && localName(n) === name; });
+  }
+  function descendants(node, name) {
+    return Array.prototype.filter.call(node.getElementsByTagName('*'), function (n) { return localName(n) === name; });
+  }
+  function textChild(node, name) {
+    var list = children(node, name);
+    return list.length ? list[0].textContent : null;
+  }
+  function decodeExcelText(value) {
+    return value.replace(/_x([0-9a-fA-F]{4})_/g, function (_, h) { return String.fromCharCode(parseInt(h, 16)); });
+  }
+  function richText(node) {
+    var result = '';
+    Array.prototype.forEach.call(node.childNodes || [], function (child) {
+      if (child.nodeType !== 1) return;
+      if (localName(child) === 't') result += child.textContent;
+      else if (localName(child) === 'r') result += children(child, 't').map(function (t) { return t.textContent; }).join('');
+    });
+    return decodeExcelText(result);
+  }
+  function parseXml(bytes, path) {
+    if (typeof DOMParser === 'undefined') fail('此环境缺少 XML 解析器，请在浏览器中读取。');
+    var source;
+    try {
+      var encoding = bytes[0] === 0xff && bytes[1] === 0xfe ? 'utf-16le' : bytes[0] === 0xfe && bytes[1] === 0xff ? 'utf-16be' : 'utf-8';
+      source = new TextDecoder(encoding, { fatal: true }).decode(bytes);
+    } catch (_) { fail('XML 编码无效：' + path); }
+    if (/<!DOCTYPE|<!ENTITY/i.test(source)) fail('不支持包含 DTD 或实体声明的文件。');
+    var xml = new DOMParser().parseFromString(source, 'application/xml');
+    if (!xml.documentElement || localName(xml.documentElement) === 'parsererror' || descendants(xml, 'parsererror').length) fail('XML 已损坏：' + path);
+    return xml;
+  }
+  function resolvePath(base, target) {
+    if (!target || /[\\\u0000]/.test(target) || /^[a-z][a-z0-9+.-]*:/i.test(target) || target.indexOf('//') === 0) fail('工作簿包含无效的内部路径。');
+    try { target = decodeURI(target); } catch (_) { fail('工作簿路径编码无效。'); }
+    var parts = (target.charAt(0) === '/' ? target.slice(1) : base.slice(0, base.lastIndexOf('/') + 1) + target).split('/');
+    var clean = [];
+    parts.forEach(function (p) {
+      if (!p || p === '.') return;
+      if (p === '..') { if (!clean.length) fail('工作簿路径越界。'); clean.pop(); }
+      else clean.push(p);
+    });
+    return clean.join('/');
+  }
+  function relationshipPath(path) {
+    var slash = path.lastIndexOf('/');
+    return path.slice(0, slash + 1) + '_rels/' + path.slice(slash + 1) + '.rels';
+  }
+  function zipDirectory(bytes) {
+    if (bytes.length < 22) fail('文件为空或不是有效的 .xlsx 文件。');
+    if (bytes[0] === 0xd0 && bytes[1] === 0xcf && bytes[2] === 0x11 && bytes[3] === 0xe0) fail('不支持加密文件或旧版 .xls，请另存为无密码的 .xlsx。');
+    var view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+    var end = -1;
+    for (var i = bytes.length - 22; i >= Math.max(0, bytes.length - 65557); i--) {
+      if (view.getUint32(i, true) === 0x06054b50 && i + 22 + view.getUint16(i + 20, true) === bytes.length) { end = i; break; }
+    }
+    if (end < 0) fail('不是完整的 XLSX ZIP 文件。');
+    var count = view.getUint16(end + 10, true);
+    var size = view.getUint32(end + 12, true);
+    var start = view.getUint32(end + 16, true);
+    if (view.getUint16(end + 4, true) || view.getUint16(end + 6, true) || view.getUint16(end + 8, true) !== count) fail('不支持分卷 ZIP 文件。');
+    if (count === 65535 || size === 0xffffffff || start === 0xffffffff) fail('不支持 ZIP64 文件。');
+    if (!count || count > 4096 || start + size > end) fail('ZIP 目录无效或文件条目过多。');
+    var entries = new Map();
+    var pos = start;
+    for (var n = 0; n < count; n++) {
+      if (pos + 46 > start + size || view.getUint32(pos, true) !== 0x02014b50) fail('ZIP 目录已损坏。');
+      var flags = view.getUint16(pos + 8, true);
+      var nameSize = view.getUint16(pos + 28, true);
+      var extraSize = view.getUint16(pos + 30, true);
+      var commentSize = view.getUint16(pos + 32, true);
+      var next = pos + 46 + nameSize + extraSize + commentSize;
+      if (next > start + size) fail('ZIP 文件名或目录已损坏。');
+      if (flags & 0x41) fail('不支持带密码的 Excel 文件。');
+      var name;
+      try { name = new TextDecoder('utf-8', { fatal: true }).decode(bytes.subarray(pos + 46, pos + 46 + nameSize)); }
+      catch (_) { fail('ZIP 文件名编码无效。'); }
+      if (!name || name.indexOf('\\') >= 0 || name.charAt(0) === '/' || name.split('/').indexOf('..') >= 0 || name.indexOf('\u0000') >= 0 || entries.has(name)) fail('ZIP 路径无效或重复。');
+      var entry = { name: name, flags: flags, method: view.getUint16(pos + 10, true), crc: view.getUint32(pos + 16, true), compressed: view.getUint32(pos + 20, true), size: view.getUint32(pos + 24, true), offset: view.getUint32(pos + 42, true) };
+      if (entry.size === 0xffffffff || entry.compressed === 0xffffffff || entry.offset === 0xffffffff || view.getUint16(pos + 34, true)) fail('不支持 ZIP64 或分卷文件。');
+      entries.set(name, entry);
+      pos = next;
+    }
+    if (pos !== start + size) fail('ZIP 目录长度无效。');
+    var unpacked = 0;
+    var cache = new Map();
+    async function extract(path) {
+      if (cache.has(path)) return cache.get(path);
+      var e = entries.get(path);
+      if (!e) fail('缺少工作簿文件：' + path);
+      if (e.size > MAX_XML - unpacked) fail('需要读取的 XML 超过 20 MB，请缩小工作簿。');
+      if (e.offset + 30 > start || view.getUint32(e.offset, true) !== 0x04034b50) fail('ZIP 本地文件头无效。');
+      if ((view.getUint16(e.offset + 6, true) & 0x41) || view.getUint16(e.offset + 8, true) !== e.method) fail('ZIP 文件头不一致或文件已加密。');
+      var dataStart = e.offset + 30 + view.getUint16(e.offset + 26, true) + view.getUint16(e.offset + 28, true);
+      if (dataStart > start || e.compressed > start - dataStart) fail('ZIP 内容不完整。');
+      var compressed = bytes.subarray(dataStart, dataStart + e.compressed);
+      var output;
+      if (e.method === 0) {
+        if (e.compressed !== e.size) fail('ZIP 未压缩条目的长度无效。');
+        output = compressed;
+      } else if (e.method === 8) {
+        if (typeof DecompressionStream === 'undefined') fail('此浏览器不支持 XLSX 解压，请使用较新的 Chrome、Edge、Firefox 或 Safari。');
+        var stream;
+        try { stream = new DecompressionStream('deflate-raw'); }
+        catch (_) { fail('此浏览器不支持 deflate-raw 解压，请更新浏览器。'); }
+        var reader = new Blob([compressed]).stream().pipeThrough(stream).getReader();
+        var pieces = [];
+        var length = 0;
+        try {
+          while (true) {
+            var chunk = await reader.read();
+            if (chunk.done) break;
+            length += chunk.value.length;
+            if (length > e.size || length > MAX_XML - unpacked) { await reader.cancel(); fail('解压内容超出声明大小或 20 MB 限制。'); }
+            pieces.push(chunk.value);
+          }
+        } catch (error) {
+          try { await reader.cancel(); } catch (_) { /* already closed */ }
+          if (error.message && error.message.indexOf('Excel：') === 0) throw error;
+          fail('ZIP 压缩内容已损坏。');
+        } finally { reader.releaseLock(); }
+        output = join(pieces, length);
+      } else fail('不支持此 ZIP 压缩方式。');
+      if (output.length !== e.size || crc32(output) !== e.crc) fail('文件校验失败，内容可能已损坏。');
+      unpacked += output.length;
+      cache.set(path, output);
+      return output;
+    }
+    return { has: function (path) { return entries.has(path); }, xml: async function (path) { return parseXml(await extract(path), path); } };
+  }
+  function columnIndex(reference) {
+    var match = /^([A-Za-z]{1,3})([1-9][0-9]*)$/.exec(reference);
+    if (!match) fail('单元格地址无效：' + reference);
+    var column = 0;
+    for (var i = 0; i < match[1].length; i++) column = column * 26 + match[1].toUpperCase().charCodeAt(i) - 64;
+    if (column > 16384 || Number(match[2]) > MAX_ROWS) fail('表格超出列数或 10,000 行限制。');
+    return { column: column - 1, row: Number(match[2]) - 1 };
+  }
+  async function read(input) {
+    var bytes;
+    if (input instanceof ArrayBuffer) bytes = new Uint8Array(input);
+    else if (ArrayBuffer.isView(input)) bytes = new Uint8Array(input.buffer, input.byteOffset, input.byteLength);
+    else if (input && typeof input.arrayBuffer === 'function') {
+      if (input.size > MAX_FILE) fail('文件超过 50 MB，请缩小文件。');
+      bytes = new Uint8Array(await input.arrayBuffer());
+    } else fail('请选择 .xlsx 文件。');
+    if (bytes.length > MAX_FILE) fail('文件超过 50 MB，请缩小文件。');
+    var zip = zipDirectory(bytes);
+    var rootRels = await zip.xml('_rels/.rels');
+    var office = descendants(rootRels, 'Relationship').filter(function (r) { return /\/officeDocument$/.test(r.getAttribute('Type') || '') && r.getAttribute('TargetMode') !== 'External'; })[0];
+    if (!office) fail('文件不是受支持的 Excel 工作簿。');
+    var workbookPath = resolvePath('', office.getAttribute('Target'));
+    var workbook = await zip.xml(workbookPath);
+    if (localName(workbook.documentElement) !== 'workbook') fail('工作簿 XML 无效。');
+    var relDoc = await zip.xml(relationshipPath(workbookPath));
+    var rels = new Map();
+    descendants(relDoc, 'Relationship').forEach(function (r) {
+      if (r.getAttribute('TargetMode') !== 'External') rels.set(r.getAttribute('Id'), { type: r.getAttribute('Type') || '', path: resolvePath(workbookPath, r.getAttribute('Target')) });
+    });
+    var shared = [];
+    var sharedRel;
+    rels.forEach(function (r) { if (/\/sharedStrings$/.test(r.type)) sharedRel = r; });
+    if (sharedRel) {
+      var sharedDoc = await zip.xml(sharedRel.path);
+      shared = children(sharedDoc.documentElement, 'si').map(richText);
+      if (shared.length > MAX_CELLS) fail('共享文本条目过多。');
+    }
+    var sheetNodes = descendants(workbook, 'sheet');
+    if (!sheetNodes.length || sheetNodes.length > 256) fail('工作表为空或工作表数量过多。');
+    var result = [];
+    var totalRows = 0;
+    var totalCells = 0;
+    for (var si = 0; si < sheetNodes.length; si++) {
+      var sheet = sheetNodes[si];
+      var id = sheet.getAttribute('r:id') || sheet.getAttributeNS(NS_REL, 'id');
+      if (!id) {
+        Array.prototype.forEach.call(sheet.attributes, function (a) { if (a.localName === 'id') id = a.value; });
+      }
+      var rel = rels.get(id);
+      if (!rel) fail('工作表关系缺失或指向外部文件。');
+      if (!/\/worksheet$/.test(rel.type)) continue;
+      var doc = await zip.xml(rel.path);
+      if (localName(doc.documentElement) !== 'worksheet') fail('工作表 XML 无效。');
+      var data = children(doc.documentElement, 'sheetData')[0];
+      var rows = [];
+      var rowNodes = data ? children(data, 'row') : [];
+      var seenRows = new Set();
+      var previousRow = -1;
+      for (var ri = 0; ri < rowNodes.length; ri++) {
+        var rowNode = rowNodes[ri];
+        var rowAttr = rowNode.getAttribute('r');
+        if (rowAttr && !/^[1-9][0-9]*$/.test(rowAttr)) fail('行编号无效。');
+        var rowIndex = rowAttr ? Number(rowAttr) - 1 : previousRow + 1;
+        previousRow = rowIndex;
+        if (rowIndex < 0 || rowIndex >= MAX_ROWS || seenRows.has(rowIndex)) fail('行号重复或超出 10,000 行限制。');
+        seenRows.add(rowIndex);
+        if (rowIndex >= rows.length) {
+          totalRows += rowIndex + 1 - rows.length;
+          if (totalRows > MAX_ROWS) fail('工作簿合计超过 10,000 行。');
+          while (rows.length <= rowIndex) rows.push([]);
+        }
+        var row = rows[rowIndex];
+        var cells = children(rowNode, 'c');
+        var nextColumn = 0;
+        var seenColumns = new Set();
+        for (var ci = 0; ci < cells.length; ci++) {
+          var cell = cells[ci];
+          var address = cell.getAttribute('r');
+          var ref = address ? columnIndex(address) : { column: nextColumn, row: rowIndex };
+          if (ref.row !== rowIndex || ref.column >= 16384 || seenColumns.has(ref.column)) fail('单元格地址不一致或重复。');
+          seenColumns.add(ref.column);
+          nextColumn = ref.column + 1;
+          if (ref.column >= row.length) {
+            totalCells += ref.column + 1 - row.length;
+            if (totalCells > MAX_CELLS) fail('表格超过 250,000 个单元格位置。');
+            while (row.length <= ref.column) row.push('');
+          }
+          var type = cell.getAttribute('t') || 'n';
+          var raw = textChild(cell, 'v');
+          var value = '';
+          if (type === 'inlineStr') { var inline = children(cell, 'is')[0]; value = inline ? richText(inline) : ''; }
+          else if (raw !== null && raw !== '') {
+            if (type === 's') {
+              if (!/^[0-9]+$/.test(raw) || Number(raw) >= shared.length) fail('共享文本引用无效。');
+              value = shared[Number(raw)];
+            } else if (type === 'n') {
+              value = Number(raw);
+              if (!Number.isFinite(value)) fail('数字单元格内容无效。');
+            } else if (type === 'b') value = raw === '1';
+            else value = decodeExcelText(raw);
+          }
+          row[ref.column] = value;
+        }
+      }
+      result.push({ name: sheet.getAttribute('name') || 'Sheet' + (si + 1), rows: rows });
+    }
+    if (!result.length) fail('工作簿中没有可读取的数据工作表。');
+    return { sheets: result };
+  }
+  function xmlEscape(value) {
+    return String(value).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&apos;' }[c]; });
+  }
+  function cellText(value) {
+    if (value.length > 32767) fail('单元格文字超过 Excel 的 32,767 字符限制。');
+    value = value.replace(/_x[0-9a-fA-F]{4}_/g, function (s) { return '_x005F_' + s.slice(1); });
+    value = value.replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f\ufffe\uffff]/g, function (c) { return '_x' + c.charCodeAt(0).toString(16).toUpperCase().padStart(4, '0') + '_'; });
+    value = value.replace(/[\ud800-\udbff](?![\udc00-\udfff])|(?<![\ud800-\udbff])[\udc00-\udfff]/g, '\ufffd');
+    return xmlEscape(value);
+  }
+  function columnName(index) {
+    var name = '';
+    for (var n = index + 1; n > 0; n = Math.floor((n - 1) / 26)) name = String.fromCharCode(65 + (n - 1) % 26) + name;
+    return name;
+  }
+  function serializeCell(value, address) {
+    if (value == null || value === '') return '';
+    var lead = '<c r="' + address + '"';
+    if (typeof value === 'number') {
+      if (!Number.isFinite(value)) fail('不能导出非有限数字。');
+      return lead + '><v>' + value + '</v></c>';
+    }
+    if (typeof value === 'boolean') return lead + ' t="b"><v>' + (value ? 1 : 0) + '</v></c>';
+    if (typeof value === 'string') return lead + ' t="inlineStr"><is><t xml:space="preserve">' + cellText(value) + '</t></is></c>';
+    if (typeof value === 'object' && typeof value.formula === 'string') {
+      var formula = value.formula.replace(/^=/, '');
+      if (!formula || formula.length > 8192 || /[\u0000-\u0008\u000b\u000c\u000e-\u001f\ufffe\uffff]/.test(formula)) fail('公式为空、过长或包含无效字符。');
+      var cached = value.value;
+      var attr = typeof cached === 'string' ? ' t="str"' : typeof cached === 'boolean' ? ' t="b"' : '';
+      if (cached != null && typeof cached !== 'number' && typeof cached !== 'string' && typeof cached !== 'boolean') fail('公式缓存值必须是文字或数字。');
+      if (typeof cached === 'number' && !Number.isFinite(cached)) fail('公式缓存值无效。');
+      var cachedXml = cached == null ? '' : '<v>' + (typeof cached === 'string' ? cellText(cached) : typeof cached === 'boolean' ? (cached ? 1 : 0) : cached) + '</v>';
+      return lead + attr + '><f>' + xmlEscape(formula) + '</f>' + cachedXml + '</c>';
+    }
+    fail('不支持的单元格类型。');
+  }
+  function storedZip(files) {
+    var chunks = [];
+    var directory = [];
+    var offset = 0;
+    files.forEach(function (file) {
+      var name = encoder.encode(file.name);
+      var bytes = encoder.encode(file.text);
+      var crc = crc32(bytes);
+      var local = new Uint8Array(30 + name.length);
+      var v = new DataView(local.buffer);
+      v.setUint32(0, 0x04034b50, true); v.setUint16(4, 20, true); v.setUint16(6, 0x800, true);
+      v.setUint16(12, 33, true); v.setUint32(14, crc, true); v.setUint32(18, bytes.length, true); v.setUint32(22, bytes.length, true); v.setUint16(26, name.length, true);
+      local.set(name, 30);
+      var central = new Uint8Array(46 + name.length);
+      var c = new DataView(central.buffer);
+      c.setUint32(0, 0x02014b50, true); c.setUint16(4, 20, true); c.setUint16(6, 20, true); c.setUint16(8, 0x800, true);
+      c.setUint16(14, 33, true); c.setUint32(16, crc, true); c.setUint32(20, bytes.length, true); c.setUint32(24, bytes.length, true); c.setUint16(28, name.length, true); c.setUint32(42, offset, true);
+      central.set(name, 46);
+      chunks.push(local, bytes); directory.push(central); offset += local.length + bytes.length;
+    });
+    var centralSize = directory.reduce(function (n, d) { return n + d.length; }, 0);
+    var end = new Uint8Array(22);
+    var e = new DataView(end.buffer);
+    e.setUint32(0, 0x06054b50, true); e.setUint16(8, files.length, true); e.setUint16(10, files.length, true); e.setUint32(12, centralSize, true); e.setUint32(16, offset, true);
+    return join(chunks.concat(directory, [end]));
+  }
+  function write(sheets) {
+    if (!Array.isArray(sheets) || !sheets.length || sheets.length > 256) fail('请提供 1 至 256 张工作表。');
+    var names = new Set();
+    var totalRows = 0;
+    var totalCells = 0;
+    var declaration = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';
+    var files = [];
+    var workbookSheets = [];
+    var relationships = [];
+    var types = [];
+    sheets.forEach(function (sheet, index) {
+      if (!sheet || !Array.isArray(sheet.rows)) fail('工作表必须包含 rows 二维数组。');
+      var name = sheet.name == null ? 'Sheet' + (index + 1) : String(sheet.name);
+      if (!name || name.length > 31 || /[\\\/?*\[\]:\u0000-\u001f\ufffe\uffff]/.test(name) || /^'|'$/.test(name) || names.has(name.toLowerCase())) fail('工作表名称无效、重复或超过 31 字符。');
+      names.add(name.toLowerCase());
+      totalRows += sheet.rows.length;
+      if (totalRows > MAX_ROWS) fail('导出合计不能超过 10,000 行。');
+      var id = index + 1;
+      var rowXml = [];
+      sheet.rows.forEach(function (row, ri) {
+        if (!Array.isArray(row) || row.length > 16384) fail('每一行必须是有效的单元格数组。');
+        totalCells += row.length;
+        if (totalCells > MAX_CELLS) fail('导出不能超过 250,000 个单元格位置。');
+        var contents = [];
+        row.forEach(function (value, ci) { contents.push(serializeCell(value, columnName(ci) + (ri + 1))); });
+        rowXml.push('<row r="' + (ri + 1) + '">' + contents.join('') + '</row>');
+      });
+      files.push({ name: 'xl/worksheets/sheet' + id + '.xml', text: declaration + '<worksheet xmlns="' + NS_MAIN + '"><sheetData>' + rowXml.join('') + '</sheetData></worksheet>' });
+      workbookSheets.push('<sheet name="' + xmlEscape(name) + '" sheetId="' + id + '" r:id="rId' + id + '"/>');
+      relationships.push('<Relationship Id="rId' + id + '" Type="' + NS_REL + '/worksheet" Target="worksheets/sheet' + id + '.xml"/>');
+      types.push('<Override PartName="/xl/worksheets/sheet' + id + '.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>');
+    });
+    files.push({ name: 'xl/workbook.xml', text: declaration + '<workbook xmlns="' + NS_MAIN + '" xmlns:r="' + NS_REL + '"><sheets>' + workbookSheets.join('') + '</sheets><calcPr calcId="191029" fullCalcOnLoad="1"/></workbook>' });
+    files.push({ name: 'xl/_rels/workbook.xml.rels', text: declaration + '<Relationships xmlns="' + NS_PACKAGE + '">' + relationships.join('') + '</Relationships>' });
+    files.push({ name: '_rels/.rels', text: declaration + '<Relationships xmlns="' + NS_PACKAGE + '"><Relationship Id="rId1" Type="' + NS_REL + '/officeDocument" Target="xl/workbook.xml"/></Relationships>' });
+    files.push({ name: '[Content_Types].xml', text: declaration + '<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>' + types.join('') + '</Types>' });
+    var xmlSize = files.reduce(function (n, f) { return n + encoder.encode(f.text).length; }, 0);
+    if (xmlSize > MAX_XML) fail('导出 XML 超过 20 MB。');
+    return storedZip(files);
+  }
+  return Object.freeze({ read: read, write: write });
+});
+
+</script>
+<script>
+(function(){'use strict';
+const root=document.getElementById('packing-mvp');
+const CONTRACT={version:'V0.13',id:'packing-mvp-v07',handledRequestIds:[],rules:['装箱页并列展示原方案重量、建议装载重量和目标重量，并展示建议相对原方案的重量变化；原数量、建议数量两列提供合计。输入无效或方案已放弃时，不把未知建议显示为零。','一键清空装车只清空本次装箱行及当前方案状态；产品、产品库存和进货记录保留。放弃方案保留当前原数量、锁定和优先设置，只停止当前未应用方案；已应用的数量不会回滚。放弃状态持续保存，切换页面、排序、编辑或重新打开页面不会自动恢复建议；点击重新生成方案，或启用/取消优先增减时恢复求解。优先设置每次切换都立即重新计算，并同步更新建议数量、补减及全部汇总；即使最优结果相同，也显示已重新计算的反馈。','货品维护和装箱列表均支持新增、查看、编辑、删除与排序。货品可按型号、单重、体积、售价、库存排序，装箱可按型号、原数量、建议数量排序，均支持升降序及逐行上移、下移；列表顺序持续保存，复制和导出使用装箱当前顺序。排序只改变展示，不改变每个型号的数量、锁定、优先规则及已选方案。','删除货品时，如本次装箱正在使用该型号，先显示联动删除提示，确认后同时移除该装箱行；取消不产生变化。删除装箱行不会删除产品。装箱选择型号时已使用的型号不可重复选择。','货品维护与装箱通过两个业务 Tab 和页面内按钮切换。货品维护统一输入型号、单位重量、单位体积、售价并管理库存；装箱页选择型号、输入数量、编辑目标重量。','不足时只补，超出时只减；仅调整表格中已有型号。锁定的型号保持原数量；优先增减的型号优先调整，锁定和优先不能同时启用。','仅展示不超过目标重量且装载重量最大的最优数量组合，最多十个。策略滑块按当前展示的实际方案数分档，每档对应一个数量组合；增重、减重都实时更新建议数量与补减值。','平均补全和最大收益推荐均在最接近目标的装载重量下求解；相同装载重量下先最大化优先货品的增减重量，再按比例给出均衡推荐或求最大收益。所有并列最大重量方案高亮；方案过多时保留最多十个代表方案并明确提示。滑块释放后吸附到离散点，点选或方向键可逐个选择。','本次装箱货品和建议合并为一张卡片、一个表格。每行显示原数量、建议数量及补减，建议数量后提供锁定、优先增减按钮；统一汇总装载重量、装载体积、销售额与每千克金额。','单位体积按 m³/件输入，支持留空；只统计建议装箱数量对应的总体积，不增加体积上限。存在体积缺失且建议数量大于零的型号时，显示待完善体积，不把缺失值视为零。','单位重量和售价只在货品维护中编辑；售价按每件、单位重量按 kg/件。数量为非负整数且不超过库存；不可恰好装满时显示余量。','货品维护支持上传 XLSX 进货单，同型号累加数量并更新产品信息。单位体积为可选导入列：缺失时保留已有体积，新型号留空；旧版四列文件仍可用。试算不扣库存。','XLSX 上传、导出显示模拟进度和状态提示。装箱清单支持一键复制及 XLSX 导出，采用当前建议数量与最新产品信息，包含单位体积和装载体积；体积缺失明确标识。','PRD 与预览的业务规则同步维护；试算数字不是需求变更。独立下载版与线上 PRD 之间不自动联网同步。']};
+const defaults={schema:CONTRACT.id,revision:0,capacity:300,mix:40,products:[{id:'a',name:'手套 · S',price:130,weight:10,stock:30,volume:null},{id:'b',name:'手套 · M',price:175,weight:12,stock:24,volume:null},{id:'c',name:'手套 · L',price:200,weight:15,stock:20,volume:null}],rows:[{id:'a',quantity:4},{id:'b',quantity:4},{id:'c',quantity:4}],receipts:[],syncRequest:null};
+const INITIAL_STATE = {"schema": "packing-mvp-v07", "revision": 1791265573979, "capacity": 20000, "mix": 100, "products": [{"id": "a", "name": "xs", "price": 1589, "weight": 4.8, "stock": 10000, "volume": 0.21}, {"id": "b", "name": "s", "price": 1589, "weight": 5.3, "stock": 10000, "volume": 0.21}, {"id": "c", "name": "m", "price": 1589, "weight": 5.8, "stock": 10000, "volume": 0.21}, {"id": "p1791261685749", "name": "l", "price": 1589, "weight": 6.3, "stock": 10000, "volume": 0.21}, {"id": "p1791262666526", "name": "xl", "price": 1665, "weight": 6.8, "stock": 10000, "volume": 0.21}], "rows": [{"id": "a", "quantity": 100, "priority": false, "locked": true}, {"id": "b", "quantity": 800, "priority": true, "locked": false}, {"id": "c", "quantity": 1150, "locked": true, "priority": false}, {"id": "p1791261685749", "quantity": 788, "locked": true, "priority": false}, {"id": "p1791262666526", "quantity": 500, "locked": true, "priority": false}], "receipts": [], "syncRequest": null, "selectedPlanKey": null, "productSort": {"field": "manual", "direction": "asc"}, "packingSort": {"field": "manual", "direction": "asc"}};
+const clone=x=>JSON.parse(JSON.stringify(x));const $=s=>root.querySelector(s);const $$=s=>Array.from(root.querySelectorAll(s));const esc=x=>String(x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));const fmt=(v,n=2)=>Number(v).toLocaleString('zh-CN',{maximumFractionDigits:n});
+let state=clone(defaults),result=null,solveTimer,saveTimer,pendingImport=null,candidates=null,candidateSignature=null,selectedIndex=0,keyboardSelection=false,fileBusy=false,progressRun=0,canonicalCandidates=null,canonicalIds=[],pendingDeleteId=null;
+function usable(s){return s&&s.schema===CONTRACT.id&&Array.isArray(s.products)&&Array.isArray(s.rows)&&Array.isArray(s.receipts);}
+if(usable(INITIAL_STATE))state=clone(INITIAL_STATE);
+try{const hostRaw=window.openai?.widgetState;const host=hostRaw?.modelContent||hostRaw;if(usable(host))state=clone(host);else{const local=JSON.parse(localStorage.getItem(CONTRACT.id)||'null');if(usable(local)&&(local.revision||0)>=(state.revision||0))state=local;}}catch(e){}
+function sortSetting(kind){const key=kind==='product'?'productSort':'packingSort';if(!state[key]||typeof state[key]!=='object')state[key]={field:'manual',direction:'asc'};return state[key];}
+function renderSortControls(){['product','packing'].forEach(kind=>{const settings=sortSetting(kind),field=$('#p-'+kind+'-sort-field'),direction=$('#p-'+kind+'-sort-direction');field.value=settings.field;direction.textContent=settings.direction==='desc'?'降序 ↓':'升序 ↑';direction.disabled=settings.field==='manual'||kind==='packing'&&settings.field==='suggested'&&(!result||state.proposalDismissed);if(kind==='packing')field.querySelector('[value="suggested"]').disabled=!result||!!state.proposalDismissed;});}
+function persist(){state.revision=Date.now();clearTimeout(saveTimer);saveTimer=setTimeout(()=>{try{localStorage.setItem(CONTRACT.id,JSON.stringify(state));}catch(e){}try{if(window.openai?.setWidgetState){window.openai.setWidgetState({modelContent:clone(state)});$('#p-storage-status').textContent='预览数据随 PRD 保存';}}catch(e){$('#p-storage-status').textContent='本次改动暂未同步';}},120);}
+window.addEventListener('openai:set_globals',e=>{const raw=e.detail?.globals?.widgetState;const incoming=raw?.modelContent||raw;if(usable(incoming)&&incoming.revision>state.revision){state=clone(incoming);renderAll();}});
+function toast(id,s){$(id).textContent=s;}
+function switchTab(name){$$('[data-page]').forEach(el=>el.hidden=el.dataset.page!==name);$$('[data-tab]').forEach(el=>el.setAttribute('aria-selected',String(el.dataset.tab===name)));if(name==='inventory')renderProducts();if(name==='packing'){renderRows();compute();}if(name==='requirements')renderRequirements();}
+$$('[data-tab]').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.tab)));
+$$('[data-go]').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.go)));
+function readRows(){if(!state.rows.length)throw new Error('请先添加一个型号。');if(new Set(state.rows.map(r=>r.id)).size!==state.rows.length)throw new Error('同一型号请合并为一行。');return state.rows.map(r=>{const p=state.products.find(p=>p.id===r.id);if(!p||!p.name.trim())throw new Error('请先在货品维护中补全型号。');return{id:r.id,name:p.name,quantity:r.quantity,price:p.price,stock:p.stock,weight:p.weight,volume:p.volume==null||p.volume===''?null:p.volume,locked:!!r.locked,priority:!!r.priority&&!r.locked};});}
+function renderRows(){const tbody=$('#p-input-rows');tbody.innerHTML=state.rows.map((r,i)=>{const product=state.products.find(p=>p.id===r.id);return `<tr data-item-id="${esc(r.id)}" class="${r.locked?'p-row-locked':''}"><td><select data-row="${i}" data-field="id" aria-label="第${i+1}行型号">${state.products.map(p=>`<option value="${esc(p.id)}" ${p.id===r.id?'selected':''} ${p.id!==r.id&&state.rows.some(other=>other.id===p.id)?'disabled':''}>${esc(p.name||'未命名产品')}</option>`).join('')}</select><div class="p-item-info">${product?.weight==null?'待填写单重':fmt(product.weight,3)+' kg/件'} · ¥${product?.price==null?'待填写售价':fmt(product.price)+'/件'} · ${product?.volume==null||product?.volume===''?'体积待完善':fmt(product.volume,6)+' m³/件'}</div></td><td data-label="原数量"><input data-row="${i}" data-field="quantity" type="number" min="0" step="1" value="${esc(r.quantity??'')}" aria-label="第${i+1}行原数量"></td><td data-label="建议数量 / 补减" class="p-suggestion" data-suggestion="${i}">—</td><td><div class="p-row-options"><button class="p-btn" data-lock="${i}" type="button" aria-pressed="${!!r.locked}" aria-label="${esc(product?.name||'第'+(i+1)+'行')}锁定">${r.locked?'已锁定':'锁定'}</button><button class="p-btn" data-priority="${i}" type="button" aria-pressed="${!!r.priority&&!r.locked}" aria-label="${esc(product?.name||'第'+(i+1)+'行')}优先增减">${r.priority&&!r.locked?'优先已启用':'优先增减'}</button><button class="p-btn" data-row-move="${i}" data-direction="-1" type="button" ${i===0?'disabled':''} aria-label="第${i+1}行上移">上移</button><button class="p-btn" data-row-move="${i}" data-direction="1" type="button" ${i===state.rows.length-1?'disabled':''} aria-label="第${i+1}行下移">下移</button><button class="p-btn p-delete-btn" data-remove="${i}" type="button" aria-label="删除第${i+1}行装箱货品">删除</button></div></td></tr>`;}).join('')||`<tr class="p-empty-row"><td colspan="4">${state.products.length?'还没有装箱货品，点击下方「添加型号」开始。':'还没有产品，请先进入「维护货品」新增产品或上传进货单。'}</td></tr>`;$('#p-add-row').disabled=state.rows.length>=state.products.length;renderSortControls();}
+$('#p-input-rows').addEventListener('input',e=>{const i=e.target.dataset.row,field=e.target.dataset.field;if(i===undefined||field!=='quantity')return;state.rows[i][field]=e.target.value===''?null:Number(e.target.value);if(sortSetting('packing').field==='quantity'||sortSetting('packing').field==='suggested')sortSetting('packing').field='manual';persist();renderSortControls();schedule();});
+$('#p-input-rows').addEventListener('change',e=>{if(e.target.dataset.field!=='id')return;const i=Number(e.target.dataset.row),p=state.products.find(p=>p.id===e.target.value);if(!p||state.rows.some((r,j)=>j!==i&&r.id===p.id)){toast('#p-packing-toast','这个型号已在装箱列表中。');renderRows();compute();return;}state.rows[i]={id:p.id,quantity:0};sortSetting('packing').field='manual';state.selectedPlanKey=null;persist();renderRows();compute();});
+$('#p-input-rows').addEventListener('click',e=>{const move=e.target.closest('[data-row-move]');if(move){moveItem('packing',Number(move.dataset.rowMove),Number(move.dataset.direction));return;}const lock=e.target.closest('[data-lock]'),priority=e.target.closest('[data-priority]'),remove=e.target.closest('[data-remove]');if(lock){const r=state.rows[Number(lock.dataset.lock)];r.locked=!r.locked;if(r.locked)r.priority=false;}else if(priority){const r=state.rows[Number(priority.dataset.priority)];r.priority=!r.priority;if(r.priority)r.locked=false;state.proposalDismissed=false;clearTimeout(solveTimer);candidateSignature=null;}else if(remove)state.rows.splice(Number(remove.dataset.remove),1);else return;state.selectedPlanKey=null;persist();renderRows();compute();if(priority)toast('#p-packing-toast',result?(state.rows[Number(priority.dataset.priority)].priority?'已启用优先增减，并重新计算方案。':'已取消优先增减，并重新计算方案。'):'优先设置已更新，请根据提示补全输入。');});
+$('#p-add-row').addEventListener('click',()=>{const p=state.products.find(p=>!state.rows.some(r=>r.id===p.id));if(p){state.rows.push({id:p.id,quantity:0});sortSetting('packing').field='manual';persist();renderRows();compute();}});
+$('#p-capacity').addEventListener('input',e=>{state.capacity=e.target.value===''?null:Number(e.target.value);persist();schedule();});
+$('#p-mix').addEventListener('keydown',()=>{keyboardSelection=true;});$('#p-mix').addEventListener('pointerdown',()=>{keyboardSelection=false;});
+$('#p-mix').addEventListener('input',e=>selectCandidate(Number(e.target.value),false));
+$('#p-mix').addEventListener('pointerup',e=>selectCandidate(Number(e.target.value),true));
+$('#p-plan-steps').addEventListener('click',e=>{const button=e.target.closest('[data-select-plan]');if(button)selectCandidate(Number(button.dataset.selectPlan),false);});
+function schedule(){clearTimeout(solveTimer);solveTimer=setTimeout(compute,80);}
+function planKey(rows,plan){return rows.map((r,i)=>[r.id,plan.quantities[i]]).sort((a,b)=>a[0]<b[0]?-1:a[0]>b[0]?1:0).map(pair=>pair[0]+':'+pair[1]).join('|');}
+function normalizePlanKey(key){return typeof key==='string'?key.split('|').sort((a,b)=>{const ai=a.slice(0,a.lastIndexOf(':')),bi=b.slice(0,b.lastIndexOf(':'));return ai<bi?-1:ai>bi?1:0;}).join('|'):null;}
+function remapCandidates(rows){const indices=rows.map(r=>canonicalIds.indexOf(r.id));return {...canonicalCandidates,plans:canonicalCandidates.plans.map(plan=>{const mapped={...plan};['quantities','deltas','averageQuantities','profitQuantities'].forEach(key=>{if(Array.isArray(plan[key]))mapped[key]=indices.map(i=>plan[key][i]);});return mapped;})};}
+function rememberSelection(){if(result&&state.rows.length===result.quantities.length)state.selectedPlanKey=planKey(state.rows,result);}
+function moveItem(kind,index,direction){const list=kind==='product'?state.products:state.rows,next=index+direction;if(next<0||next>=list.length)return;compute();rememberSelection();[list[index],list[next]]=[list[next],list[index]];sortSetting(kind).field='manual';persist();renderProducts();renderRows();compute();}
+function sortItems(kind){const settings=sortSetting(kind);if(settings.field==='manual'){persist();renderSortControls();return;}compute();if(kind==='packing'&&settings.field==='suggested'&&!result){renderSortControls();return;}rememberSelection();const suggested=new Map(state.rows.map((r,i)=>[r.id,result?.quantities[i]])),values=new Map(state.products.map(p=>[p.id,p]));const list=kind==='product'?state.products:state.rows;const getValue=item=>kind==='product'?item[settings.field]:settings.field==='name'?values.get(item.id)?.name:settings.field==='suggested'?suggested.get(item.id):item.quantity;list.sort((a,b)=>{const av=getValue(a),bv=getValue(b),am=av===null||av===undefined||av==='',bm=bv===null||bv===undefined||bv==='';if(am||bm)return am===bm?0:am?1:-1;const order=typeof av==='string'?av.localeCompare(String(bv),'zh-CN',{numeric:true}):Number(av)-Number(bv);return settings.direction==='desc'?-order:order;});persist();renderProducts();renderRows();compute();}
+['product','packing'].forEach(kind=>{$('#p-'+kind+'-sort-field').addEventListener('change',e=>{sortSetting(kind).field=e.target.value;sortItems(kind);});$('#p-'+kind+'-sort-direction').addEventListener('click',()=>{const settings=sortSetting(kind);settings.direction=settings.direction==='desc'?'asc':'desc';sortItems(kind);});});
+function nearestMaximum(index){return Math.round(index);}
+function selectCandidate(index,snap=false){if(!candidates?.plans.length)return;let next=Math.max(0,Math.min(candidates.plans.length-1,Math.round(index)));if(snap)next=nearestMaximum(next);selectedIndex=next;state.mix=candidates.plans.length>1?next/(candidates.plans.length-1)*100:0;state.selectedPlanKey=planKey(readRows(),candidates.plans[next]);persist();renderSelected();}
+function drawCandidates(){const svg=$('#p-scheme-chart');if(!candidates?.plans.length){svg.innerHTML='';return;}const width=Math.max(240,svg.getBoundingClientRect().width),height=96,pad=10,plans=candidates.plans,maximum=candidates.maxWeight??Math.max(...plans.map(p=>p.weight)),minimum=Math.min(...plans.map(p=>p.weight)),span=maximum-minimum||1;svg.setAttribute('viewBox',`0 0 ${width} ${height}`);const x=i=>plans.length===1?width/2:pad+i/(plans.length-1)*(width-pad*2),y=w=>66-(w-minimum)/span*40;const best=new Set(candidates.maxWeightIndices||plans.map((p,i)=>i));svg.innerHTML=`<line x1="${pad}" y1="74" x2="${width-pad}" y2="74" stroke="var(--p-line)"/><text x="${pad}" y="91">每个点对应一个数量组合</text><text x="${width-pad}" y="13" text-anchor="end">最大 ${fmt(maximum,3)} kg</text>`+plans.map((p,i)=>`<circle class="${best.has(i)?'p-best-point':'p-point'}" data-plan-index="${i}" cx="${x(i)}" cy="${y(p.weight)}" r="${best.has(i)?4.5:3}"/>`).join('')+`<circle class="p-selected-point" cx="${x(selectedIndex)}" cy="${y(plans[selectedIndex].weight)}" r="7"/>`;svg.setAttribute('aria-label',`展示 ${plans.length} 个最优方案，${best.size} 个最大重量点，当前第 ${selectedIndex+1} 个。`);}
+$('#p-scheme-chart').addEventListener('click',e=>{if(!candidates?.plans.length)return;const box=e.currentTarget.getBoundingClientRect(),fraction=Math.max(0,Math.min(1,(e.clientX-box.left-8)/Math.max(1,box.width-16)));const hit=e.target.getAttribute?.('data-plan-index');selectCandidate(hit!==null&&hit!==undefined?Number(hit):fraction*(candidates.plans.length-1),false);});
+if(window.ResizeObserver)new ResizeObserver(()=>drawCandidates()).observe($('#p-scheme-chart'));
+function volumeSummary(rows,plan){let value=0;const missing=[];rows.forEach((r,i)=>{if(plan.quantities[i]<=0)return;if(r.volume===null||r.volume===undefined||r.volume===''||!Number.isFinite(Number(r.volume)))missing.push(r.name);else value+=Number(r.volume)*plan.quantities[i];});return{value:missing.length?null:value,knownValue:value,missing};}
+function inputTotals(){let quantity=0,weight=0,quantityValid=true,weightValid=true;for(const row of state.rows){const q=row.quantity,product=state.products.find(p=>p.id===row.id);if(q===null||q===undefined||q===''||!Number.isSafeInteger(Number(q))||Number(q)<0){quantityValid=false;weightValid=false;continue;}quantity+=Number(q);if(Number(q)===0)continue;const w=product?.weight;if(w===null||w===undefined||w===''||!Number.isFinite(Number(w))||Number(w)<=0){weightValid=false;continue;}weight+=Number(q)*Number(w);}return{quantity:quantityValid?quantity:null,weight:weightValid?Math.round(weight*1000)/1000:null};}
+function renderQuantityTotals(plan){const original=inputTotals(),suggested=plan?plan.quantities.reduce((total,q)=>total+q,0):null;$('#p-original-quantity-total').textContent=original.quantity===null?'—':fmt(original.quantity,0)+' 件';$('#p-suggested-quantity-total').textContent=suggested===null?'—':fmt(suggested,0)+' 件';}
+function renderMetrics(plan){const original=inputTotals(),target=state.capacity!==null&&Number.isFinite(state.capacity)&&state.capacity>0?state.capacity:null,weight=plan?.weight??null,change=weight===null||original.weight===null?null:Math.round((weight-original.weight)*1000)/1000;const value=w=>w===null?'—':fmt(w,3)+' <small>kg</small>';const volume=plan?volumeSummary(readRows(),plan):null,pct=plan&&target?Math.min(100,plan.weight/target*100):null,capped=candidates&&(candidates.capped===true||candidates.truncated===true||candidates.complete===false);$('#p-result-body').innerHTML=`<div class="p-weight-comparison"><div><div class="p-muted">原方案重量</div><div class="p-num" id="p-original-weight">${value(original.weight)}</div></div><div><div class="p-muted">建议装载重量</div><div class="p-num" id="p-suggested-weight">${value(weight)}</div></div><div><div class="p-muted">目标重量</div><div class="p-num" id="p-target-weight">${value(target)}</div></div><div class="p-weight-change" id="p-weight-delta">${change===null?'重量变化 —':'较原方案 '+(change>0?'+':'')+fmt(change,3)+' kg'}</div></div><div class="p-summary"><div><div class="p-muted">建议装载率</div><div class="p-num">${pct===null?'—':fmt(pct,1)+' <small>%</small>'}</div><div class="p-track" role="img" aria-label="${pct===null?'尚无建议装载率':'装载率 '+fmt(pct,1)+'%'}"><span class="p-segment" style="width:${pct??0}%"></span></div><div class="p-muted">${plan?'剩余 '+fmt(plan.remaining,3)+' kg':'生成方案后显示装载率'}</div></div><div><div class="p-muted">装载体积</div><div class="p-num" id="p-volume-value">${!volume?'—':volume.value===null?'待完善体积':fmt(volume.value,6)+' <small>m³</small>'}</div><div class="p-muted" id="p-volume-note">${!volume?'生成方案后显示装载体积':volume.missing.length?esc(volume.missing.join('、'))+' 未填写单位体积':'按建议数量汇总'}</div></div><div><div class="p-muted">每千克金额</div><div class="p-num">${plan?'¥'+fmt(plan.weight?plan.revenue/plan.weight:0)+' <small>/ kg</small>':'—'}</div><div class="p-secondary-amount">预计销售额 ${plan?'¥'+fmt(plan.revenue):'—'}</div></div></div>${plan?'<div class="p-result-hint">'+(capped?'展示最多十个最接近目标重量的最优数量组合，均不超重。':'已展示全部最接近目标重量的最优数量组合，均不超重。')+'</div>':''}`;renderQuantityTotals(plan);}
+function syncProposalActions(){const active=!!result&&!state.proposalDismissed;$('#p-apply').disabled=!active;$('#p-copy').disabled=!active;$('#p-export').disabled=!active||fileBusy;$('#p-clear-packing').disabled=!state.rows.length;$('#p-discard-plan').disabled=!active;$('#p-regenerate-plan').hidden=!state.proposalDismissed;$('#p-regenerate-plan').disabled=!state.rows.length;$('#p-proposal-notice').hidden=!state.proposalDismissed;renderSortControls();}
+function resetProposalDisplay(message,empty=false){result=null;candidates=null;canonicalCandidates=null;candidateSignature=null;$('#p-errors').hidden=!message;$('#p-errors').textContent=message||'';$('#p-mode').textContent=state.proposalDismissed?'方案已放弃':empty?'未添加货品':'等待有效输入';$$('[data-suggestion]').forEach(c=>c.textContent='—');$('#p-mix').disabled=true;$('#p-mix-label').textContent=state.proposalDismissed?'方案已放弃':empty?'暂无方案':'等待有效输入';$('#p-candidate-count').textContent='';$('#p-best-label').textContent='最大装载重量';$('#p-mix-note').textContent='';$('#p-scheme-chart').innerHTML='';$('#p-plan-steps').innerHTML='';$('#p-copy-panel').hidden=true;renderMetrics(null);syncProposalActions();}
+function renderSelected(){if(!candidates?.plans.length||state.proposalDismissed)return;const rows=readRows();result=candidates.plans[selectedIndex];const count=candidates.plans.length;$('#p-mix').min='0';$('#p-mix').max=String(count-1);$('#p-mix').step='1';$('#p-mix').value=String(selectedIndex);$('#p-mix').disabled=count<2;$('#p-mix').setAttribute('aria-valuetext',`第 ${selectedIndex+1} / ${count} 个最优方案，重量 ${fmt(result.weight,3)} kg`);$('#p-average-endpoint').textContent=candidates.endpointsCoincide?'平均 / 最大收益同一方案':'平均补全';$('#p-profit-endpoint').textContent=count===1?'唯一方案':candidates.endpointsCoincide?'其他最优组合':'最大收益';$('#p-mix-label').textContent=`第 ${selectedIndex+1} / ${count} 个方案`;$('#p-candidate-count').textContent=`${count} 个最优方案 · ${count} 个离散档位 · 每档一个方案`;$('#p-best-label').textContent=`最大装载重量 · ${(candidates.maxWeightIndices||[]).length} 个点`;const capped=candidates.capped===true||candidates.truncated===true||candidates.complete===false;$('#p-mix-note').textContent=(selectedIndex===candidates.averageIndex?'当前为平均补全推荐。':selectedIndex===candidates.profitIndex?'当前为最大收益推荐。':'当前为最大装载重量的可选组合。')+' 拖动后吸附到离散点，点选下方序号或方向键逐个选择。'+(capped?' 最优组合较多，展示最多十个代表方案。':' 已展示全部最优组合。');$('#p-plan-steps').style.setProperty('--p-steps',String(count));$('#p-plan-steps').innerHTML=candidates.plans.map((p,i)=>`<button type="button" class="p-plan-step" data-select-plan="${i}" aria-pressed="${i===selectedIndex}" aria-label="选择第 ${i+1} 个方案${i===candidates.averageIndex?'，平均补全':i===candidates.profitIndex?'，最大收益':''}" title="方案 ${i+1} · ${fmt(p.weight,3)} kg">${i+1}</button>`).join('');$('#p-errors').hidden=true;$('#p-mode').textContent=result.mode==='add'?'增重优化':result.mode==='remove'?'减重优化':'已达目标';$$('[data-suggestion]').forEach(cell=>{const i=Number(cell.dataset.suggestion),d=result.deltas[i];cell.innerHTML=`${fmt(result.quantities[i],0)}<span class="p-delta ${d<0?'p-delta-minus':''}">${d>0?'补 '+fmt(d,0)+' 件':d<0?'减 '+fmt(-d,0)+' 件':'不变'}${rows[i].locked?' · 已锁定':''}</span>`;});renderMetrics(result);syncProposalActions();drawCandidates();}
+function compute(){if(state.proposalDismissed){resetProposalDisplay('',!state.rows.length);return;}try{const rows=readRows();if(state.capacity===null||rows.some(r=>r.quantity===null||r.price===null||r.weight===null))throw new Error('请填写目标重量和数量，并在货品维护中填写单重与售价。');if(!Number.isFinite(state.capacity)||state.capacity<=0)throw new Error('目标装载重量须大于零。');const canonicalRows=rows.slice().sort((a,b)=>a.id<b.id?-1:a.id>b.id?1:0),signature=JSON.stringify([canonicalRows,state.capacity]);if(signature!==candidateSignature){if(!window.PackCandidates)throw new Error('方案求解模块尚未加载。');const next=window.PackCandidates.build(canonicalRows,state.capacity);if(!next.plans?.length)throw new Error('当前输入没有可行的装箱方案。');canonicalCandidates=next;canonicalIds=canonicalRows.map(r=>r.id);candidateSignature=signature;const rememberedKey=normalizePlanKey(state.selectedPlanKey),remembered=rememberedKey?next.plans.findIndex(p=>planKey(canonicalRows,p)===rememberedKey):-1;selectedIndex=remembered>=0?remembered:Math.round(Math.max(0,Math.min(100,state.mix||0))/100*(next.plans.length-1));}candidates=remapCandidates(rows);renderSelected();}catch(e){resetProposalDisplay(state.rows.length?e.message:'',!state.rows.length);}}
+$('#p-clear-packing').addEventListener('click',()=>{state.rows=[];state.selectedPlanKey=null;state.mix=0;state.proposalDismissed=false;sortSetting('packing').field='manual';selectedIndex=0;persist();renderRows();compute();toast('#p-packing-toast','本次装箱货品已清空。');});
+$('#p-discard-plan').addEventListener('click',()=>{if(!result)return;state.proposalDismissed=true;state.selectedPlanKey=null;persist();compute();toast('#p-packing-toast','已放弃当前未应用方案。');});
+$('#p-regenerate-plan').addEventListener('click',()=>{state.proposalDismissed=false;candidateSignature=null;persist();compute();toast('#p-packing-toast',result?'已重新生成装箱方案。':'请补全有效输入后再生成方案。');});
+$('#p-apply').addEventListener('click',()=>{compute();if(!result)return;state.rows.forEach((r,i)=>r.quantity=result.quantities[i]);persist();renderRows();compute();toast('#p-packing-toast','已应用到原方案，未扣减库存。');});
+function download(bytes,name,type){const url=URL.createObjectURL(new Blob([bytes],{type}));const a=document.createElement('a');a.href=url;a.download=name;root.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),2000);}
+function xlsx(sheets,name){download(window.PackXlsx.write(sheets),name,'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');}
+const delay=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+async function withFileProgress(kind,task){if(fileBusy)throw new Error('请等待当前文件处理完成。');fileBusy=true;const run=++progressRun,started=performance.now();const label=kind==='upload'?'现在正在上传':'现在正在导出中';const box=$('#p-file-progress');box.hidden=false;box.dataset.failed='false';$('#p-loader-label').textContent=label;$('#p-loader-note').textContent='模拟进度 · 文件在当前页面处理';let value=5;const paint=()=>{$('#p-loader-value').textContent=Math.round(value)+'%';$('#p-loader-bar').style.width=value+'%';$('#p-loader-progress').setAttribute('aria-valuenow',String(Math.round(value)));};paint();$('#p-file').disabled=true;$('#p-template').disabled=true;$('#p-export').disabled=true;const timer=setInterval(()=>{value=Math.min(92,value+(94-value)*.19);paint();},120);try{await delay(30);const output=await task();await delay(Math.max(0,750-(performance.now()-started)));clearInterval(timer);value=100;paint();$('#p-loader-label').textContent=kind==='upload'?'上传处理完成':'导出文件已生成';$('#p-loader-note').textContent=kind==='upload'?'模拟进度 · 请检查清单并确认入库':'模拟进度 · 已发起下载，请查看浏览器下载列表';setTimeout(()=>{if(run===progressRun)box.hidden=true;},1200);return output;}catch(e){clearInterval(timer);box.dataset.failed='true';$('#p-loader-label').textContent=(kind==='upload'?'上传失败':'导出失败')+'：'+e.message;$('#p-loader-note').textContent='模拟进度 · 本次处理未完成';throw e;}finally{fileBusy=false;$('#p-file').disabled=false;$('#p-template').disabled=false;$('#p-export').disabled=!result;}}
+$('#p-template').addEventListener('click',async()=>{try{await withFileProgress('export',()=>xlsx([{name:'进货单',rows:[['型号','售价（元/件）','单位重量（kg/件）','入库数量（件）','单位体积（m³/件）'],['示例型号 A',130,10,30,''],['示例型号 B',175,12,24,'']]},{name:'填写说明',rows:[['以上为可修改示例，不是固定业务数值。'],['第一行为列名；新增产品须有售价、单位重量和入库数量。'],['单位体积为可选列，单位 m³/件。留空时保留已有产品的体积，新产品暂不填写。'],['库存按同型号累加；同一文件不会重复入库。'],['重量单位 kg，最多三位小数；数量为非负整数。']]}],'进货单模板.xlsx'));}catch(e){toast('#p-inv-toast',e.message);}});
+$('#p-export').addEventListener('click',async()=>{compute();if(!result)return;const snapshot={rows:clone(readRows()),result:clone(result),original:inputTotals(),capacity:state.capacity,index:selectedIndex,count:candidates.plans.length,complete:candidates.complete};try{await withFileProgress('export',()=>{const rows=snapshot.rows,result=snapshot.result,original=snapshot.original,volume=volumeSummary(rows,result),last=rows.length+1,quantity=result.quantities.reduce((sum,q)=>sum+q,0),body=[['型号','单位重量（kg/件）','售价（元/件）','建议数量（件）','装载重量（kg）','金额（元）','单位体积（m³/件）','装载体积（m³）','原数量（件）','建议变更（件）','调整方式']];rows.forEach((r,i)=>{const n=i+2,q=result.quantities[i],v=r.volume==null||r.volume===''?null:Number(r.volume);body.push([r.name,r.weight,r.price,q,{formula:`B${n}*D${n}`,value:r.weight*q},{formula:`C${n}*D${n}`,value:r.price*q},v===null?'':v,{formula:`IF(D${n}=0,0,IF(G${n}="","待完善体积",G${n}*D${n}))`,value:q===0?0:v===null?'待完善体积':v*q},r.quantity,q-r.quantity,r.locked?'锁定':r.priority?'优先增减':'常规']);});body.push(['合计','','',{formula:`SUM(D2:D${last})`,value:quantity},{formula:`SUM(E2:E${last})`,value:result.weight},{formula:`SUM(F2:F${last})`,value:result.revenue},'',{formula:`IF(COUNTIF(H2:H${last},"待完善体积")>0,"待完善体积",SUM(H2:H${last}))`,value:volume.value===null?'待完善体积':volume.value},{formula:`SUM(I2:I${last})`,value:original.quantity},{formula:`SUM(J2:J${last})`,value:quantity-original.quantity},'']);xlsx([{name:'装箱清单',rows:body},{name:'方案汇总',rows:[['指标','结果'],['目标重量（kg）',snapshot.capacity],['建议装载重量（kg）',{formula:`SUM('装箱清单'!E2:E${last})`,value:result.weight}],['销售额（元）',{formula:`SUM('装箱清单'!F2:F${last})`,value:result.revenue}],['剩余容量（kg）',{formula:'B2-B3',value:result.remaining}],['每千克金额（元/kg）',{formula:'IFERROR(B4/B3,0)',value:result.weight?result.revenue/result.weight:0}],['装载体积（m³）',{formula:`IF(COUNTIF('装箱清单'!H2:H${last},"待完善体积")>0,"待完善体积",SUM('装箱清单'!H2:H${last}))`,value:volume.value===null?'待完善体积':volume.value}],['原方案重量（kg）',{formula:`SUMPRODUCT('装箱清单'!B2:B${last},'装箱清单'!I2:I${last})`,value:original.weight}],['重量变化（kg）',{formula:'B3-B8',value:Math.round((result.weight-original.weight)*1000)/1000}],['原数量合计（件）',{formula:`SUM('装箱清单'!I2:I${last})`,value:original.quantity}],['建议数量合计（件）',{formula:`SUM('装箱清单'!D2:D${last})`,value:quantity}],['体积状态',volume.missing.length?volume.missing.join('、')+' 未填写单位体积':'完整'],['方案序号',snapshot.index+1],['展示最优方案数',snapshot.count],['方案范围',snapshot.complete?'全部最优数量组合':'最多十个最优代表组合'],['说明','采用当前建议数量与最新产品信息；合计公式不重复计算合计行。原方案、建议和目标重量并列复核；体积仅统计，缺失值不视为零，本文件不含宏。']]}],'装箱清单.xlsx');});toast('#p-packing-toast','已生成当前建议的装箱清单，下载已发起。');}catch(e){toast('#p-packing-toast','导出失败：'+e.message);}});
+function copyText(){const rows=readRows(),original=inputTotals(),volume=volumeSummary(rows,result),quantity=result.quantities.reduce((sum,q)=>sum+q,0),clean=v=>{const text=String(v??'').replace(/[\t\r\n]+/g,' ');return typeof v==='string'&&/^[=+@-]/.test(text)?"'"+text:text;},body=[['型号','单位重量（kg/件）','售价（元/件）','建议数量（件）','装载重量（kg）','金额（元）','单位体积（m³/件）','装载体积（m³）','原数量（件）','建议变更（件）','调整方式']];rows.forEach((r,i)=>{const q=result.quantities[i],v=r.volume==null||r.volume===''?null:Number(r.volume);body.push([r.name,r.weight,r.price,q,Number((r.weight*q).toFixed(3)),Number((r.price*q).toFixed(2)),v===null?'待完善':v,q===0?0:v===null?'待完善体积':Number((v*q).toFixed(8)),r.quantity,q-r.quantity,r.locked?'锁定':r.priority?'优先增减':'常规']);});body.push(['合计','','',quantity,result.weight,result.revenue,'',volume.value===null?'待完善体积':volume.value,original.quantity,quantity-original.quantity,''],[],['原方案重量（kg）',original.weight],['建议装载重量（kg）',result.weight],['目标重量（kg）',state.capacity],['重量变化（kg）',Math.round((result.weight-original.weight)*1000)/1000],['原数量合计（件）',original.quantity],['建议数量合计（件）',quantity],['装载体积（m³）',volume.value===null?'待完善体积':volume.value],['预计销售额（元）',result.revenue],['每千克金额（元/kg）',result.weight?Number((result.revenue/result.weight).toFixed(2)):0],['剩余容量（kg）',result.remaining]);return body.map(row=>row.map(clean).join('\t')).join('\n');}
+$('#p-copy').addEventListener('click',async()=>{compute();if(!result)return;const text=copyText();$('#p-copy-panel').hidden=true;let copied=false;try{if(navigator.clipboard?.writeText){await navigator.clipboard.writeText(text);copied=true;}}catch(e){}if(!copied){const field=$('#p-copy-text');field.value=text;$('#p-copy-panel').hidden=false;field.focus();field.select();try{copied=document.execCommand('copy');}catch(e){}if(copied)$('#p-copy-panel').hidden=true;}toast('#p-packing-toast',copied?'装箱清单已复制，可直接粘贴到 Excel。':'请在下方选中清单，手动复制。');});
+function renderProducts(){$('#p-products').innerHTML=state.products.map((p,i)=>`<tr data-item-id="${esc(p.id)}"><td data-label="型号"><input data-product="${i}" data-pfield="name" value="${esc(p.name)}" aria-label="产品${i+1}型号"></td><td data-label="单重 / kg"><input data-product="${i}" data-pfield="weight" type="number" min="0.001" step="0.001" value="${esc(p.weight??'')}" aria-label="产品${i+1}单位重量"></td><td data-label="单位体积 / m³"><input data-product="${i}" data-pfield="volume" type="number" min="0" step="any" placeholder="可留空" value="${esc(p.volume??'')}" aria-label="产品${i+1}单位体积"></td><td data-label="售价 / 元"><input data-product="${i}" data-pfield="price" type="number" min="0" step="0.01" value="${esc(p.price??'')}" aria-label="产品${i+1}售价"></td><td data-label="库存 / 件"><input data-product="${i}" data-pfield="stock" type="number" min="0" step="1" value="${esc(p.stock??'')}" aria-label="产品${i+1}库存"></td><td data-label="操作"><div class="p-list-actions"><button class="p-btn" data-product-move="${i}" data-direction="-1" type="button" ${i===0?'disabled':''} aria-label="产品${i+1}上移">上移</button><button class="p-btn" data-product-move="${i}" data-direction="1" type="button" ${i===state.products.length-1?'disabled':''} aria-label="产品${i+1}下移">下移</button><button class="p-btn p-delete-btn" data-product-delete="${i}" type="button" aria-label="删除产品${i+1}">删除</button></div></td></tr>`).join('')||'<tr class="p-empty-row"><td colspan="6">还没有产品。点击「新增产品」，或上传 XLSX 进货单。</td></tr>';$('#p-product-count').textContent=`${state.products.length} 个型号`;$('#p-receipts').innerHTML=state.receipts.length?state.receipts.slice(-4).reverse().map(r=>`<p>${esc(r.name)} · ${r.lines} 行 · +${fmt(r.quantity,0)} 件</p>`).join(''):'还没有导入进货单。';renderSortControls();renderDeleteConfirmation();}
+function renderDeleteConfirmation(){const product=state.products.find(p=>p.id===pendingDeleteId);$('#p-delete-confirm').hidden=!product;if(product){const references=state.rows.filter(r=>r.id===product.id).length;$('#p-delete-message').textContent=references?`「${product.name}」正在本次装箱中使用。删除产品后，也会移除对应的 ${references} 行装箱货品。确定删除吗？`:`确定删除产品「${product.name}」吗？`;}}
+function removeProduct(id){const product=state.products.find(p=>p.id===id);if(!product)return;state.products=state.products.filter(p=>p.id!==id);state.rows=state.rows.filter(r=>r.id!==id);state.selectedPlanKey=null;pendingDeleteId=null;persist();renderProducts();renderRows();compute();toast('#p-inv-toast','已删除产品「'+product.name+'」。');}
+$('#p-products').addEventListener('click',e=>{const move=e.target.closest('[data-product-move]'),remove=e.target.closest('[data-product-delete]');if(move){moveItem('product',Number(move.dataset.productMove),Number(move.dataset.direction));return;}if(!remove)return;const product=state.products[Number(remove.dataset.productDelete)];if(!product)return;if(state.rows.some(r=>r.id===product.id)){pendingDeleteId=product.id;renderDeleteConfirmation();}else removeProduct(product.id);});
+$('#p-delete-confirm-button').addEventListener('click',()=>{if(pendingDeleteId)removeProduct(pendingDeleteId);});$('#p-delete-cancel-button').addEventListener('click',()=>{pendingDeleteId=null;renderDeleteConfirmation();});
+$('#p-products').addEventListener('change',e=>{const i=e.target.dataset.product,f=e.target.dataset.pfield;if(i===undefined)return;const p=state.products[i],value=f==='name'?e.target.value.trim():(e.target.value===''?null:Number(e.target.value));let error='';if(f==='name'&&(!value||state.products.some((x,j)=>j!==Number(i)&&x.name===value)))error='型号不能为空或重复。';if(f==='price'&&(!Number.isFinite(value)||value<0))error='售价须为非负数。';if(f==='weight'&&(!Number.isFinite(value)||value<=0||Math.abs(value*1000-Math.round(value*1000))>1e-6))error='重量须为正数，最多保留三位小数。';if(f==='volume'&&value!==null&&(!Number.isFinite(value)||value<0))error='单位体积须为非负数，也可留空。';if(f==='stock'&&(!Number.isSafeInteger(value)||value<0))error='库存须为非负整数。';if(error){toast('#p-inv-toast',error);renderProducts();return;}p[f]=value;if(sortSetting('product').field===f)sortSetting('product').field='manual';if(f==='name'&&sortSetting('packing').field==='name')sortSetting('packing').field='manual';persist();renderSortControls();renderRows();compute();toast('#p-inv-toast','货品信息已保存，装箱方案与导出清单已同步更新。');});
+$('#p-add-product').addEventListener('click',()=>{let n=state.products.length+1;while(state.products.some(p=>p.name==='新型号 '+n))n++;let id='p'+Date.now();while(state.products.some(p=>p.id===id))id+='x';state.products.push({id,name:'新型号 '+n,price:0,weight:1,stock:0,volume:null});sortSetting('product').field='manual';persist();renderProducts();renderRows();compute();});
+function showImportError(msg){$('#p-import-error').hidden=!msg;$('#p-import-error').textContent=msg;}
+function fingerprint(bytes){let h=2166136261;for(const v of new Uint8Array(bytes)){h^=v;h=Math.imul(h,16777619);}return bytes.byteLength+'-'+(h>>>0).toString(16);}
+const aliases={name:['型号','产品型号','sku','商品型号','名称'],price:['售价','单价','售价元件','销售价','price'],weight:['单位重量','单件重量','重量kg','单位重量kg件','weight'],volume:['单位体积','单件体积','体积','volume'],quantity:['入库数量','采购数量','数量','库存数量','入库数量件','quantity']};const fieldNames={name:'型号',price:'售价（元/件）',weight:'单位重量（kg/件）',quantity:'入库数量（件）',volume:'单位体积（m³/件，可选）'};
+function norm(s){return String(s??'').trim().toLowerCase().replace(/[\s（）()\/／_-]/g,'');}
+$('#p-file').addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;showImportError('');$('#p-import-panel').hidden=true;pendingImport=null;try{const parsed=await withFileProgress('upload',async()=>{if(!/\.xlsx$/i.test(f.name))throw new Error('请选择 .xlsx 文件；不执行宏。');const bytes=await f.arrayBuffer();const hash=fingerprint(bytes);if(state.receipts.some(r=>r.hash===hash))throw new Error('这个文件已经入库，本次没有重复增加库存。');const data=await window.PackXlsx.read(bytes);if(!data.sheets.length)throw new Error('文件没有可读取的工作表。');return {data,hash};});const {data,hash}=parsed;pendingImport={data,name:f.name,hash,index:0,mapping:{},valid:null};const preferred=data.sheets.findIndex(s=>/进货|入库/.test(s.name));pendingImport.index=Math.max(0,preferred);$('#p-sheet').innerHTML=data.sheets.map((s,i)=>`<option value="${i}">${esc(s.name)}</option>`).join('');$('#p-sheet').value=String(pendingImport.index);$('#p-import-title').textContent='检查进货单：'+f.name;$('#p-import-panel').hidden=false;renderMapping();}catch(err){showImportError(err.message);}finally{e.target.value='';}});
+function renderMapping(){const s=pendingImport.data.sheets[pendingImport.index],heads=s.rows[0]||[];pendingImport.mapping={};Object.keys(fieldNames).forEach(key=>{let index=heads.findIndex(h=>aliases[key].some(a=>norm(h)===a||norm(h).startsWith(a)));pendingImport.mapping[key]=index;});$('#p-mapping').innerHTML=Object.entries(fieldNames).map(([k,label])=>`<label><span class="p-label">${label}</span><select data-map="${k}"><option value="-1">${k==='volume'?'无此列，保留已有体积':'选择对应列'}</option>${heads.map((h,i)=>`<option value="${i}" ${pendingImport.mapping[k]===i?'selected':''}>${esc(h||'空列 '+(i+1))}</option>`).join('')}</select></label>`).join('');validateImport();}
+$('#p-sheet').addEventListener('change',e=>{pendingImport.index=Number(e.target.value);renderMapping();});$('#p-mapping').addEventListener('change',e=>{if(!e.target.dataset.map)return;pendingImport.mapping[e.target.dataset.map]=Number(e.target.value);validateImport();});
+function validateImport(){pendingImport.valid=null;$('#p-import-confirm').disabled=true;const m=pendingImport.mapping,required=['name','price','weight','quantity'],mapped=Object.values(m).filter(i=>i>=0);if(required.some(k=>m[k]<0)||new Set(mapped).size!==mapped.length){$('#p-import-summary').textContent='请为型号、售价、单位重量和数量选择不同的列；单位体积可选。';return;}try{const raw=pendingImport.data.sheets[pendingImport.index].rows.slice(1),merged=new Map();let nonempty=0;raw.forEach((row,i)=>{if(!row.some(c=>c!==null&&c!==undefined&&String(c).trim()!==''))return;nonempty++;const name=String(row[m.name]??'').trim(),quantity=Number(row[m.quantity]),price=Number(row[m.price]),weight=Number(row[m.weight]),hasVolume=m.volume>=0&&row[m.volume]!==null&&row[m.volume]!==undefined&&String(row[m.volume]).trim()!=='',volume=hasVolume?Number(row[m.volume]):null;if(!name||[m.quantity,m.price,m.weight].some(k=>row[k]===null||row[k]===undefined||String(row[k]).trim()==='')||!Number.isSafeInteger(quantity)||quantity<0||!Number.isFinite(price)||price<0||!Number.isFinite(weight)||weight<=0||Math.abs(weight*1000-Math.round(weight*1000))>1e-6)throw new Error('第 '+(i+2)+' 行：请检查型号、售价、单位重量和整数入库数量。');if(hasVolume&&(!Number.isFinite(volume)||volume<0))throw new Error('第 '+(i+2)+' 行：单位体积须为非负数，也可留空。');const old=merged.get(name);if(old&&(old.price!==price||old.weight!==weight||old.volume!==null&&volume!==null&&old.volume!==volume))throw new Error('同型号存在不同售价、单位重量或体积：'+name);const combined=quantity+(old?.quantity||0),existing=state.products.find(p=>p.name===name);if(!Number.isSafeInteger(combined)||!Number.isSafeInteger(combined+(existing?.stock||0)))throw new Error('入库数量超出可处理范围：'+name);merged.set(name,{name,price,weight,volume:volume??old?.volume??null,quantity:combined});});if(!nonempty)throw new Error('没有可入库的货品行。');pendingImport.valid=[...merged.values()];const total=pendingImport.valid.reduce((a,r)=>a+r.quantity,0);$('#p-import-summary').textContent=`识别 ${pendingImport.valid.length} 个型号，共 ${fmt(total,0)} 件。同型号累加库存并更新售价、重量；有填写的体积会更新，空白保留已有体积，新型号自动创建。`;$('#p-import-confirm').disabled=false;}catch(e){$('#p-import-summary').textContent=e.message;}}
+$('#p-import-confirm').addEventListener('click',()=>{validateImport();if(!pendingImport?.valid)return;const list=pendingImport.valid;if(state.receipts.some(r=>r.hash===pendingImport.hash)){showImportError('该文件已入库。');return;}for(const r of list){let p=state.products.find(p=>p.name===r.name);if(p){p.stock+=r.quantity;p.price=r.price;p.weight=r.weight;if(r.volume!==null)p.volume=r.volume;}else{state.products.push({id:'p'+Date.now()+'-'+state.products.length,name:r.name,price:r.price,weight:r.weight,stock:r.quantity,volume:r.volume});}}state.receipts.push({name:pendingImport.name,hash:pendingImport.hash,lines:list.length,quantity:list.reduce((a,r)=>a+r.quantity,0),at:new Date().toISOString()});pendingImport=null;$('#p-import-panel').hidden=true;persist();renderProducts();renderRows();compute();toast('#p-inv-toast','已完成入库，产品信息与可用库存已更新。');});$('#p-import-cancel').addEventListener('click',()=>{pendingImport=null;$('#p-import-panel').hidden=true;});
+function renderRequirements(){$('#p-version').textContent=CONTRACT.version;$('#p-rules').innerHTML=CONTRACT.rules.map(r=>'<li>'+esc(r)+'</li>').join('');$('#p-change').value=state.syncRequest?.text||'';$('#p-sync-status').textContent=state.syncRequest&&CONTRACT.handledRequestIds.includes(state.syncRequest.id)?'此请求已合入当前 PRD 与预览。':state.syncRequest?(window.openai?.setWidgetState?'已保存待同步请求，等待文档维护任务处理。':'已保存在本机；请将需求说明交回本对话以同步 PRD。'):'还没有待同步请求。';}
+$('#p-change-save').addEventListener('click',()=>{const text=$('#p-change').value.trim();if(!text){toast('#p-sync-status','请先填写需求调整内容。');return;}state.syncRequest={id:'request-'+Date.now(),text,createdAt:new Date().toISOString(),baseVersion:CONTRACT.version};persist();renderRequirements();});
+$('#p-export-prd').addEventListener('click',()=>{const md='# 手套装箱 MVP\n\n版本：'+CONTRACT.version+'\n\n'+CONTRACT.rules.map(r=>'- '+r).join('\n')+(state.syncRequest?'\n\n## 待同步需求\n\n'+state.syncRequest.text:'');download(md,'装箱MVP需求说明.md','text/markdown;charset=utf-8');});
+function renderAll(){candidateSignature=null;$('#p-capacity').value=state.capacity??'';renderRows();renderProducts();renderRequirements();compute();if(window.openai?.setWidgetState)$('#p-storage-status').textContent='预览数据随 PRD 保存';}
+window.PackMvp={getState:()=>clone(state),getResult:()=>result?clone(result):null,getCandidates:()=>candidates?clone(candidates):null,getSelectedIndex:()=>selectedIndex,contract:CONTRACT};renderAll();
+})();
+</script>
+</body></html>
